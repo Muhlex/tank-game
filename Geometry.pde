@@ -1,25 +1,37 @@
-class Geometry {
-	int x1;
-	int y1;
-	int x2;
-	int y2;
+class Geometry extends Entity {
+	PVector[] points;
 	color colorBG;
+	PShape shape;
 
-	Geometry(int x1, int y1, int x2, int y2, color colorBG) {
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
+	Geometry(PVector[] points, color colorBG) {
+		this.points = points;
 		this.colorBG = colorBG;
+		this.shape = createShape();
+
+		this.shape.setFill(this.colorBG);
+		this.shape.setStroke(false);
+		this.shape.beginShape();
+		for (PVector point : points) {
+			this.shape.vertex(point.x, point.y);
+		}
+		this.shape.endShape(CLOSE);
+	}
+
+	PVector[] getLine(int index) {
+		int a = index;
+		int b = index < this.points.length - 1 ? index + 1 : 0;
+		return new PVector[] { points[a], points[b] };
+	}
+
+	PVector[][] getLines() {
+		PVector[][] result = new PVector[this.points.length][2];
+		for (int i = 0; i < this.points.length; i++) {
+			result[i] = this.getLine(i);
+		}
+		return result;
 	}
 
 	void draw() {
-		push();
-
-		fill(colorBG);
-		rectMode(CORNERS);
-		rect(x1, y1, x2, y2);
-
-		pop();
+		shape(this.shape);
 	}
 }

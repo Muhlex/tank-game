@@ -3,8 +3,8 @@ class InputManager extends Entity {
 	HashSet inputsActive;
 
 	InputManager() {
-		this.inputsActive = new HashSet();
 		this.inputMappings = new StringDict();
+		this.inputsActive = new HashSet();
 
 		this.inputMappings.set("a", "moveleft");
 		this.inputMappings.set("d", "moveright");
