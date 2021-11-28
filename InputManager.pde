@@ -6,6 +6,8 @@ class InputManager extends Entity {
 		this.inputMappings = new StringDict();
 		this.inputsActive = new HashSet();
 
+		this.inputMappings.set("w", "moveup");
+		this.inputMappings.set("s", "movedown");
 		this.inputMappings.set("a", "moveleft");
 		this.inputMappings.set("d", "moveright");
 	}

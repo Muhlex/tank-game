@@ -18,9 +18,9 @@ class Geometry extends Entity {
 	}
 
 	PVector[] getLine(int index) {
-		int a = index;
-		int b = index < this.points.length - 1 ? index + 1 : 0;
-		return new PVector[] { points[a], points[b] };
+		PVector start = this.points[index];
+		PVector end = this.points[index < this.points.length - 1 ? index + 1 : 0];
+		return new PVector[] { start, end };
 	}
 
 	PVector[][] getLines() {
