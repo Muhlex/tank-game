@@ -1,34 +1,45 @@
 class InputManager extends Entity {
-	StringDict inputMappings;
+	HashMap<Integer,String> inputMappings;
 	HashSet inputsActive;
 
 	InputManager() {
-		this.inputMappings = new StringDict();
+		this.inputMappings = new HashMap<Integer,String>();
 		this.inputsActive = new HashSet();
 
-		this.inputMappings.set("w", "moveup");
-		this.inputMappings.set("s", "movedown");
-		this.inputMappings.set("a", "moveleft");
-		this.inputMappings.set("d", "moveright");
+		this.inputMappings.put(KeyEvent.VK_W, "moveup");
+		this.inputMappings.put(KeyEvent.VK_S, "movedown");
+		this.inputMappings.put(KeyEvent.VK_A, "moveleft");
+		this.inputMappings.put(KeyEvent.VK_D, "moveright");
+		this.inputMappings.put(KeyEvent.VK_SHIFT, "shift");
 	}
 
 	boolean getIsActive(String inputName) {
 		return this.inputsActive.contains(inputName);
 	}
 
-	String getInputForKey(char key) {
-		return this.inputMappings.get(Character.toString(key));
+	String getInputForKey(int keyCode) {
+		return this.inputMappings.get(keyCode);
 	}
 
-	void keyPressed() {
-		String inputName = this.getInputForKey(key);
-		if (inputName == null) return;
+	void OnKeyPressed() {
+		String inputName = this.getInputForKey(keyCode);
+		if (inputName == null || this.getIsActive(inputName)) return;
 		this.inputsActive.add(inputName);
+
+		entities.OnInputStart(inputName);
 	}
 
-	void keyReleased() {
-		String inputName = this.getInputForKey(key);
-		if (inputName == null) return;
+	void OnKeyReleased() {
+		String inputName = this.getInputForKey(keyCode);
+		if (inputName == null || !this.getIsActive(inputName)) return;
 		this.inputsActive.remove(inputName);
+
+		entities.OnInputEnd(inputName);
+	}
+
+	void OnTick() {
+		if (!focused) {
+			this.inputsActive.clear();
+		}
 	}
 }

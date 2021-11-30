@@ -31,7 +31,7 @@ class Geometry extends Entity {
 		return result;
 	}
 
-	void draw() {
+	void OnDraw() {
 		shape(this.shape);
 	}
 }

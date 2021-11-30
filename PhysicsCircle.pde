@@ -5,10 +5,9 @@ class PhysicsCircle extends Entity {
 	float mass;
 	float bounce;
 	float roll;
+
 	int lastCollisionTick;
 	boolean onGround;
-
-	PVector lastCollisionNormal;
 
 	PhysicsCircle(PVector origin, PVector velocity, float radius, float mass, float bounce, float roll) {
 		this.origin = origin;
@@ -19,11 +18,10 @@ class PhysicsCircle extends Entity {
 		this.roll = roll;
 
 		this.lastCollisionTick = -1;
-		this.lastCollisionNormal = new PVector(0, -1);
 		this.onGround = false;
 	}
 
-	void tick() {
+	void OnTick() {
 		this.velocity.y += this.mass * GRAVITY;
 		this.origin.add(this.velocity);
 
@@ -35,7 +33,7 @@ class PhysicsCircle extends Entity {
 		PVector normalAverage = new PVector();
 		PVector reflectionTotal = new PVector();
 
-		for (Geometry geo : geos) {
+		for (Geometry geo : entities.getGeometry()) {
 			for (PVector[] line : geo.getLines()) {
 				float dist = this.getLinePointDist(line[0], line[1], this.origin);
 
@@ -66,12 +64,14 @@ class PhysicsCircle extends Entity {
 		this.origin.add(geometryIntersection); // move circle out of geometry
 		this.velocity = PVector.mult(reflectionTotal.setMag(this.velocity.mag()), reflectionMult); // update velocity
 
-		this.lastCollisionNormal = normalAverage;
 		this.lastCollisionTick = tickCount;
+		this.OnCollision(normalAverage, collisionForce);
 	}
 
 	float getLinePointDist(PVector start, PVector end, PVector circlePos) {
 		Line2D.Float line = new Line2D.Float(start.x, start.y, end.x, end.y);
 		return (float)line.ptSegDist(circlePos.x, circlePos.y);
 	}
+
+	void OnCollision(PVector normal, float force) {}
 }

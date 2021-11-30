@@ -11,7 +11,7 @@ class DebugBall extends PhysicsCircle {
 		this.velocity.add(velocity);
 	}
 
-	void tick() {
+	void OnTick() {
 		if (inputs.getIsActive("moveup")) {
 			this.move(new PVector(0, -0.1));
 		}
@@ -25,10 +25,10 @@ class DebugBall extends PhysicsCircle {
 			this.move(new PVector(0.1, 0));
 		}
 
-		super.tick();
+		super.OnTick();
 	}
 
-	void draw() {
+	void OnDraw() {
 		fill(colorCircle);
 		circle(this.origin.x, this.origin.y, this.radius * 2);
 

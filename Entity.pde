@@ -1,7 +1,18 @@
 abstract class Entity {
-	void mousePressed() {};
-	void keyPressed() {};
-	void keyReleased() {};
-	void tick() {};
-	void draw() {};
+	Entity() {
+		entities.add(this);
+	}
+
+	void delete() {
+		entities.remove(this);
+	}
+
+	void OnKeyPressed() {};
+	void OnKeyReleased() {};
+	void OnInputStart(String inputName) {};
+	void OnInputEnd(String inputName) {};
+	void OnMousePressed() {};
+	void OnMouseMoved() {};
+	void OnTick() {};
+	void OnDraw() {};
 }

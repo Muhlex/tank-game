@@ -1,25 +1,37 @@
 class Tank extends PhysicsCircle {
-	color colorPlayer;
-	float maxSpeed;
+	color tint;
+	float rotation;
 	boolean flipped;
-	PImage image;
+	PVector aimDirection;
+
+	PImage imageBody;
+	PImage imageGun;
 	float imageScale;
 
-	Tank(float x, float y, color colorPlayer) {
-		super(new PVector(x, y), new PVector(), 16, 10, 0.15, 0.0);
+	Tank(PVector origin, color tint) {
+		super(origin, new PVector(), 16, 10, 0.15, 0.0);
 
-		this.maxSpeed = 5;
-		this.colorPlayer = colorPlayer;
-		this.image = loadImage("res/tank.png");
+		this.tint = tint;
+		this.rotation = 0.0;
 		this.flipped = false;
+		this.aimDirection = new PVector(2, 0);
+
+		this.imageBody = loadImage("res/tank.png");
+		this.imageGun = loadImage("res/tank-gun.png");
 		this.imageScale = 0.375; // 48px
 	}
 
 	void accelerate(float amount) {
-		this.velocity.add(this.lastCollisionNormal.copy().rotate(HALF_PI).mult(amount));
+		this.velocity.add(PVector.fromAngle(this.rotation).mult(amount));
 	}
 
-	void tick() {
+	void updateAim() {
+		this.aimDirection = new PVector(mouseX, mouseY).sub(this.origin);
+	}
+
+	void OnTick() {
+		this.updateAim();
+
 		float accelScale = 0.0;
 		if (inputs.getIsActive("moveleft")) accelScale -= 0.05;
 		if (inputs.getIsActive("moveright")) accelScale += 0.05;
@@ -37,19 +49,36 @@ class Tank extends PhysicsCircle {
 				this.roll = 0.0;
 		}
 
-		super.tick();
+		super.OnTick();
 	}
 
-	void draw() {
-		fill(colorPlayer);
+	void OnCollision(PVector normal, float force) {
+		this.rotation = normal.heading() + HALF_PI;
+	}
+
+	void OnMousePressed() {
+		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(16));
+		new Projectile(projectileOrigin, new PVector(mouseX, mouseY).sub(projectileOrigin).div(50), this.tint);
+	}
+
+	void OnDraw() {
+		tint(this.tint);
+		imageMode(CENTER);
 		translate(this.origin.x, this.origin.y);
-		rotate(this.lastCollisionNormal.heading() + HALF_PI);
+
+		pushMatrix();
+		rotate(this.rotation);
 		if (this.flipped)
 			scale(-this.imageScale, this.imageScale);
 		else
 			scale(this.imageScale);
-		imageMode(CENTER);
-		tint(colorPlayer);
-		image(image, 0, 0);
+		image(this.imageBody, 0, 0);
+		popMatrix();
+
+		translate(0, -8 * this.imageScale);
+		scale(this.imageScale);
+		rotate(this.aimDirection.heading() + PI);
+
+		image(this.imageGun, 0, 0);
 	}
 }
