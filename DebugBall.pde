@@ -34,7 +34,7 @@ class DebugBall extends PhysicsCircle {
 
 		textSize(12);
 		textLeading(14);
-		String text = "MASS: " + this.mass + "\nBOUNCE: " + nf(this.bounce, 0, 2) + "\nROLL: " + nf(this.roll, 0, 2);
+		String text = "MASS: " + nf(this.mass, 0, 0) + "\nBOUNCE: " + nf(this.bounce, 0, 2) + "\nROLL: " + nf(this.roll, 0, 2);
 		float textX = this.origin.x + this.radius;
 		float textY = this.origin.y + this.radius * 2;
 		fill(0);

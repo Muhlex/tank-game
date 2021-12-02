@@ -22,20 +22,34 @@ class PhysicsCircle extends Entity {
 	}
 
 	void OnTick() {
+		this.cleanupOffscreen();
+
 		this.velocity.y += this.mass * GRAVITY;
 		this.origin.add(this.velocity);
 
-		this.onGround = this.lastCollisionTick > tickCount - 5;
+		this.onGround = this.lastCollisionTick > currentTick - 5;
 
+		this.updateCollision();
+	}
+
+	void cleanupOffscreen() {
+		boolean offscreenX = this.origin.x < width * -1 || this.origin.x > width + width * 1;
+		boolean offscreenY = this.origin.y < height * -8 || this.origin.y > height + height * 4;
+		if (offscreenX || offscreenY)
+			this.delete();
+	}
+
+	void updateCollision() {
 		int collisionCount = 0;
 		PVector velocityNormalized = this.velocity.copy().normalize();
 		PVector geometryIntersection = new PVector(); // how far the circle entered geometry on this tick
 		PVector normalAverage = new PVector();
 		PVector reflectionTotal = new PVector();
+		PVector collisionPos = null;
 
-		for (Geometry geo : entities.getGeometry()) {
+		for (Geometry geo : entities.getEntitiesByClass(Geometry.class)) {
 			for (PVector[] line : geo.getLines()) {
-				float dist = this.getLinePointDist(line[0], line[1], this.origin);
+				float dist = this.getLineSegmentPointDist(line[0], line[1], this.origin);
 
 				if (dist < this.radius) {
 					PVector normal = PVector.sub(line[1], line[0]).rotate(-HALF_PI).normalize(); // normalized vector perpendicular to the line (on the left side -> outside)
@@ -47,6 +61,10 @@ class PhysicsCircle extends Entity {
 
 					PVector reflectionNormalized = PVector.sub(velocityNormalized, PVector.mult(normal, 2).mult(normalDot)); // https://math.stackexchange.com/a/13263
 					reflectionTotal.add(reflectionNormalized);
+
+					if (collisionCount == 0) { // only do for the first line that was hit
+						collisionPos = getClosestPointOnLineSegment(line[1], line[0], this.origin);
+					}
 
 					collisionCount++;
 				}
@@ -64,14 +82,26 @@ class PhysicsCircle extends Entity {
 		this.origin.add(geometryIntersection); // move circle out of geometry
 		this.velocity = PVector.mult(reflectionTotal.setMag(this.velocity.mag()), reflectionMult); // update velocity
 
-		this.lastCollisionTick = tickCount;
-		this.OnCollision(normalAverage, collisionForce);
+		this.lastCollisionTick = currentTick;
+		this.OnCollision(collisionPos, normalAverage, collisionForce);
 	}
 
-	float getLinePointDist(PVector start, PVector end, PVector circlePos) {
-		Line2D.Float line = new Line2D.Float(start.x, start.y, end.x, end.y);
-		return (float)line.ptSegDist(circlePos.x, circlePos.y);
+	float getLineSegmentPointDist(PVector start, PVector end, PVector point) {
+		return (float)Line2D.ptSegDist(start.x, start.y, end.x, end.y, point.x, point.y);
 	}
 
-	void OnCollision(PVector normal, float force) {}
+	PVector getClosestPointOnLineSegment(PVector start, PVector end, PVector point)
+	{
+		PVector diff = PVector.sub(end, start);
+		double frac = ((point.x - start.x) * diff.x + (point.y - start.y) * diff.y) / (diff.x * diff.x + diff.y * diff.y);
+
+		if (frac < 0.0)
+			return start.copy();
+		else if (frac > 1.0)
+			return end.copy();
+		else
+			return new PVector((float)(start.x + frac * diff.x), (float)(start.y + frac * diff.y));
+	}
+
+	void OnCollision(PVector collisionPos, PVector normal, float force) {}
 }

@@ -29,6 +29,11 @@ class Tank extends PhysicsCircle {
 		this.aimDirection = new PVector(mouseX, mouseY).sub(this.origin);
 	}
 
+	void shootProjectile() {
+		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(16));
+		new Projectile(projectileOrigin, new PVector(mouseX, mouseY).sub(projectileOrigin).div(50), this.tint);
+	}
+
 	void OnTick() {
 		this.updateAim();
 
@@ -52,13 +57,12 @@ class Tank extends PhysicsCircle {
 		super.OnTick();
 	}
 
-	void OnCollision(PVector normal, float force) {
+	void OnCollision(PVector collisionPos, PVector normal, float force) {
 		this.rotation = normal.heading() + HALF_PI;
 	}
 
 	void OnMousePressed() {
-		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(16));
-		new Projectile(projectileOrigin, new PVector(mouseX, mouseY).sub(projectileOrigin).div(50), this.tint);
+		this.shootProjectile();
 	}
 
 	void OnDraw() {

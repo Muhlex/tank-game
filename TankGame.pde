@@ -1,12 +1,16 @@
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 
 PFont font;
 final int TICK_RATE = 100;
-int tickCount = 0;
+final int TICK_MS = 1000 / TICK_RATE;
+int currentTick = 0;
 final float GRAVITY = 0.005;
 
 EntityManager entities;
@@ -16,7 +20,7 @@ ArrayList<Geometry> geos;
 void setup() {
 	size(960, 540);
 	pixelDensity(displayDensity());
-	frameRate(300);
+	frameRate(9999);
 	surface.setTitle("Tank Game");
 
 	font = createFont("res/barlow-medium.ttf", 16);
@@ -67,11 +71,10 @@ void setup() {
 }
 
 void setupTick() {
-	int tickLength = 1000 / TICK_RATE;
 	while (true) {
 		tick();
-		tickCount++;
-		delay(tickLength);
+		currentTick++;
+		delay(TICK_MS);
 	}
 }
 
@@ -84,9 +87,12 @@ void draw() {
 
 	entities.OnDraw();
 
-	text("fps: " + (int)frameRate, 4, 20);
-	text("TICK_RATE: " + TICK_RATE, 4, 40);
-	text("GRAVITY: " + GRAVITY, 4, 60);
+	String debugText = "fps: " + (int)frameRate + "\n" +
+		"entities: " + entities.getEntityCount();
+	push();
+	textLeading(16);
+	text(debugText, 4, 20);
+	pop();
 }
 
 void keyPressed() {

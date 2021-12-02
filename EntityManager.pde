@@ -1,38 +1,45 @@
 class EntityManager {
-	CopyOnWriteArrayList<Entity> entityList; // https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/CopyOnWriteArrayList.html
-	ArrayList<Geometry> geometryList;
+	List<Entity> entities;
+	Map<Class,List<Entity>> entitiesByClass;
 
 	EntityManager() {
-		this.entityList = new CopyOnWriteArrayList<Entity>();
-		this.geometryList = new ArrayList<Geometry>();
+		this.entities = new CopyOnWriteArrayList<Entity>();
+		this.entitiesByClass = new ConcurrentHashMap<Class,List<Entity>>();
 	}
 
 	void add(Entity entity) {
-		this.entityList.add(entity);
+		this.entities.add(entity);
 
-		if (entity instanceof Geometry)
-			this.geometryList.add((Geometry)entity);
+		Class entityClass = entity.getClass();
+		List classList = this.entitiesByClass.getOrDefault(entityClass, new CopyOnWriteArrayList<Entity>());
+		classList.add(entity);
+		this.entitiesByClass.put(entityClass, classList);
 	}
 
 	void remove(Entity entity) {
-		this.entityList.remove(entity);
+		this.entities.remove(entity);
 
-		if (entity instanceof Geometry)
-			this.geometryList.remove((Geometry)entity);
+		List classEntities = this.getEntitiesByClass(entity.getClass());
+		classEntities.remove(entity);
 	}
 
-	ArrayList<Geometry> getGeometry() {
-		return this.geometryList;
+	<E extends Entity> List<E> getEntitiesByClass(Class<E> entityClass) {
+		this.entitiesByClass.putIfAbsent(entityClass, new CopyOnWriteArrayList<Entity>());
+		return (List<E>)this.entitiesByClass.get(entityClass);
+	}
+
+	int getEntityCount() {
+		return this.entities.size();
 	}
 
 	void OnTick() {
-		for (Entity entity : this.entityList) {
+		for (Entity entity : this.entities) {
 			entity.OnTick();
 		}
 	}
 
 	void OnDraw() {
-		for (Entity entity : this.entityList) {
+		for (Entity entity : this.entities) {
 			push();
 			entity.OnDraw();
 			pop();
@@ -40,37 +47,37 @@ class EntityManager {
 	}
 
 	void OnKeyPressed() {
-		for (Entity entity : this.entityList) {
+		for (Entity entity : this.entities) {
 			entity.OnKeyPressed();
 		}
 	}
 
 	void OnKeyReleased() {
-		for (Entity entity : this.entityList) {
+		for (Entity entity : this.entities) {
 			entity.OnKeyReleased();
 		}
 	}
 
 	void OnInputStart(String inputName) {
-		for (Entity entity : this.entityList) {
+		for (Entity entity : this.entities) {
 			entity.OnInputStart(inputName);
 		}
 	}
 
 	void OnInputEnd(String inputName) {
-		for (Entity entity : this.entityList) {
+		for (Entity entity : this.entities) {
 			entity.OnInputEnd(inputName);
 		}
 	}
 
 	void OnMousePressed() {
-		for (Entity entity : this.entityList) {
+		for (Entity entity : this.entities) {
 			entity.OnMousePressed();
 		}
 	}
 
 	void OnMouseMoved() {
-		for (Entity entity : this.entityList) {
+		for (Entity entity : this.entities) {
 			entity.OnMouseMoved();
 		}
 	}
