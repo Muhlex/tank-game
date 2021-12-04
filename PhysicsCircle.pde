@@ -6,7 +6,7 @@ class PhysicsCircle extends Entity {
 	float bounce;
 	float roll;
 
-	int lastCollisionTick;
+	Collision lastCollision;
 	boolean onGround;
 
 	PhysicsCircle(PVector origin, PVector velocity, float radius, float mass, float bounce, float roll) {
@@ -17,7 +17,7 @@ class PhysicsCircle extends Entity {
 		this.bounce = bounce;
 		this.roll = roll;
 
-		this.lastCollisionTick = -1;
+		this.lastCollision = null;
 		this.onGround = false;
 	}
 
@@ -27,9 +27,10 @@ class PhysicsCircle extends Entity {
 		this.velocity.y += this.mass * GRAVITY;
 		this.origin.add(this.velocity);
 
-		this.onGround = this.lastCollisionTick > currentTick - 5;
-
 		this.updateCollision();
+
+		if (this.lastCollision != null && this.lastCollision.tick < currentTick - 5)
+			this.onGround = false;
 	}
 
 	void cleanupOffscreen() {
@@ -46,6 +47,8 @@ class PhysicsCircle extends Entity {
 		PVector normalAverage = new PVector();
 		PVector reflectionTotal = new PVector();
 		PVector collisionPos = null;
+		List<Entity> collidedEntities = new ArrayList<Entity>();
+		collidedEntities.add(this);
 
 		for (Geometry geo : entities.getEntitiesByClass(Geometry.class)) {
 			for (PVector[] line : geo.getLines()) {
@@ -66,6 +69,7 @@ class PhysicsCircle extends Entity {
 						collisionPos = getClosestPointOnLineSegment(line[1], line[0], this.origin);
 					}
 
+					collidedEntities.add(geo);
 					collisionCount++;
 				}
 			}
@@ -81,9 +85,16 @@ class PhysicsCircle extends Entity {
 
 		this.origin.add(geometryIntersection); // move circle out of geometry
 		this.velocity = PVector.mult(reflectionTotal.setMag(this.velocity.mag()), reflectionMult); // update velocity
+		this.onGround = abs(normalAverage.heading() + HALF_PI) <= QUARTER_PI; // angled max 45deg
 
-		this.lastCollisionTick = currentTick;
-		this.OnCollision(collisionPos, normalAverage, collisionForce);
+		this.lastCollision = new Collision(
+			currentTick,
+			collisionPos,
+			normalAverage,
+			collisionForce,
+			collidedEntities.toArray(new Entity[0])
+		);
+		this.OnCollision(this.lastCollision);
 	}
 
 	float getLineSegmentPointDist(PVector start, PVector end, PVector point) {
@@ -103,5 +114,5 @@ class PhysicsCircle extends Entity {
 			return new PVector((float)(start.x + frac * diff.x), (float)(start.y + frac * diff.y));
 	}
 
-	void OnCollision(PVector collisionPos, PVector normal, float force) {}
+	void OnCollision(Collision collision) {}
 }

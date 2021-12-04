@@ -9,7 +9,7 @@ class Tank extends PhysicsCircle {
 	float imageScale;
 
 	Tank(PVector origin, color tint) {
-		super(origin, new PVector(), 16, 10, 0.15, 0.0);
+		super(origin, new PVector(), 16, 20, 0.15, 0.0);
 
 		this.tint = tint;
 		this.rotation = 0.0;
@@ -38,18 +38,18 @@ class Tank extends PhysicsCircle {
 		this.updateAim();
 
 		float accelScale = 0.0;
-		if (inputs.getIsActive("moveleft")) accelScale -= 0.05;
-		if (inputs.getIsActive("moveright")) accelScale += 0.05;
+		if (inputs.getIsActive("moveleft")) accelScale -= 0.1;
+		if (inputs.getIsActive("moveright")) accelScale += 0.1;
 
 		if (!this.onGround) accelScale = 0.0;
 
 		if (accelScale != 0) {
 			this.accelerate(accelScale);
 			this.flipped = accelScale > 0.0;
-			this.roll = 0.96;
+			this.roll = 0.95;
 		} else {
 			if (this.velocity.mag() > 0.25)
-				this.roll = 0.85;
+				this.roll = 0.8;
 			else
 				this.roll = 0.0;
 		}
@@ -57,8 +57,9 @@ class Tank extends PhysicsCircle {
 		super.OnTick();
 	}
 
-	void OnCollision(PVector collisionPos, PVector normal, float force) {
-		this.rotation = normal.heading() + HALF_PI;
+	void OnCollision(Collision collision) {
+		if (this.onGround)
+			this.rotation = collision.normal.heading() + HALF_PI;
 	}
 
 	void OnMousePressed() {

@@ -7,8 +7,8 @@ class Projectile extends PhysicsCircle {
 		this.tint = tint;
 	}
 
-	void OnCollision(PVector collisionPos, PVector normal, float force) {
-		new Explosion(collisionPos, 96.0);
+	void OnCollision(Collision collision) {
+		new Explosion(collision.position, 96.0);
 		this.delete();
 	}
 
