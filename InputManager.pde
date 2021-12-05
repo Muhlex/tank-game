@@ -1,4 +1,4 @@
-class InputManager extends Entity {
+class InputManager {
 	HashMap<Integer,String> inputMappings;
 	HashSet inputsActive;
 
@@ -10,6 +10,7 @@ class InputManager extends Entity {
 		this.inputMappings.put(KeyEvent.VK_S, "movedown");
 		this.inputMappings.put(KeyEvent.VK_A, "moveleft");
 		this.inputMappings.put(KeyEvent.VK_D, "moveright");
+		this.inputMappings.put(KeyEvent.VK_R, "restart");
 		this.inputMappings.put(KeyEvent.VK_SHIFT, "shift");
 	}
 

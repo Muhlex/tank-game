@@ -8,7 +8,7 @@ class Projectile extends PhysicsCircle {
 	}
 
 	void OnCollision(Collision collision) {
-		new Explosion(collision.position, 96.0);
+		new Explosion(collision.position, 96.0).spawn();
 		this.delete();
 	}
 

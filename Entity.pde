@@ -1,9 +1,8 @@
 abstract class Entity {
 	int birthTick;
 
-	Entity() {
+	void spawn() {
 		this.birthTick = currentTick;
-
 		entities.add(this);
 	}
 

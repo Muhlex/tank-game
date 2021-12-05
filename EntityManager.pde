@@ -23,6 +23,11 @@ class EntityManager {
 		classEntities.remove(entity);
 	}
 
+	void clear() {
+		this.entities.clear();
+		this.entitiesByClass.clear();
+	}
+
 	<E extends Entity> List<E> getEntitiesByClass(Class<E> entityClass) {
 		this.entitiesByClass.putIfAbsent(entityClass, new CopyOnWriteArrayList<Entity>());
 		return (List<E>)this.entitiesByClass.get(entityClass);

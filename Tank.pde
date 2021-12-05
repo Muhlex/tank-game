@@ -16,8 +16,8 @@ class Tank extends PhysicsCircle {
 		this.flipped = false;
 		this.aimDirection = new PVector(2, 0);
 
-		this.imageBody = loadImage("res/tank.png");
-		this.imageGun = loadImage("res/tank-gun.png");
+		this.imageBody = loadImage("textures/tank.png");
+		this.imageGun = loadImage("textures/tank-gun.png");
 		this.imageScale = 0.375; // 48px
 	}
 
@@ -31,7 +31,7 @@ class Tank extends PhysicsCircle {
 
 	void shootProjectile() {
 		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(16));
-		new Projectile(projectileOrigin, new PVector(mouseX, mouseY).sub(projectileOrigin).div(50), this.tint);
+		new Projectile(projectileOrigin, new PVector(mouseX, mouseY).sub(projectileOrigin).div(50), this.tint).spawn();
 	}
 
 	void OnTick() {
