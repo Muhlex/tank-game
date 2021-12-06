@@ -1,6 +1,8 @@
 import java.util.List;
 import java.util.Map;
 import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.awt.event.KeyEvent;
@@ -10,7 +12,10 @@ import java.awt.geom.Line2D;
 PFont font;
 final int TICK_RATE = 100;
 final int TICK_MS = 1000 / TICK_RATE;
-int currentTick = 0;
+long currentTick = 0; // TODO: move to level
+long lastTickMillis = 0;
+float tickRate = 0;
+int lastTickDuration = 0;
 final float GRAVITY = 0.005;
 
 EntityManager entities;
@@ -18,9 +23,9 @@ LevelManager levels;
 InputManager inputs;
 
 void setup() {
-	size(960, 540);
+	size(960, 540, P2D);
 	pixelDensity(displayDensity());
-	frameRate(9999);
+	frameRate(1000);
 	surface.setTitle("Tank Game");
 
 	font = createFont("fonts/barlow-medium.ttf", 16);
@@ -30,18 +35,23 @@ void setup() {
 	levels = new LevelManager();
 	inputs = new InputManager();
 
-	thread("setupTick");
-}
+	TimerTask tickTask = new TimerTask() {
+		void run() {
+			long millis = System.currentTimeMillis();
 
-void setupTick() {
-	while (true) {
-		tick();
-		currentTick++;
-		delay(TICK_MS);
-	}
+			tick();
+			currentTick++;
+
+			lastTickDuration = (int)(System.currentTimeMillis() - millis);
+			tickRate = (float)(1000 / (millis - lastTickMillis == 0 ? 1 : millis - lastTickMillis));
+			lastTickMillis = millis;
+		}
+	};
+	new Timer().scheduleAtFixedRate(tickTask, 0L, (long)TICK_MS);
 }
 
 void tick() {
+	inputs.OnTick();
 	entities.OnTick();
 }
 
@@ -51,6 +61,7 @@ void draw() {
 	entities.OnDraw();
 
 	String debugText = "fps: " + (int)frameRate + "\n" +
+		"tps: " + (int)tickRate + " (" + lastTickDuration + "ms)\n" +
 		"entities: " + entities.getEntityCount();
 	push();
 	textLeading(16);

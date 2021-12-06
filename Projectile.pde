@@ -2,7 +2,7 @@ class Projectile extends PhysicsCircle {
 	color tint;
 
 	Projectile(PVector origin, PVector velocity, color tint) {
-		super(origin, velocity, 8, 10, 0.33, 0.0);
+		super(origin, velocity, 8, 0.1, 0.33, 0.0);
 
 		this.tint = tint;
 	}
@@ -15,6 +15,6 @@ class Projectile extends PhysicsCircle {
 	void OnDraw() {
 		noStroke();
 		fill(tint);
-		circle(this.origin.x, this.origin.y, this.radius * 1.5);
+		circle(this.origin.x, this.origin.y, this.radius * 5);
 	}
 }

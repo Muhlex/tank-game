@@ -1,5 +1,5 @@
 abstract class Entity {
-	int birthTick;
+	long birthTick;
 
 	void spawn() {
 		this.birthTick = currentTick;

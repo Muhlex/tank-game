@@ -1,5 +1,6 @@
 class PhysicsCircle extends Entity {
 	PVector origin;
+	PVector lastTickOrigin;
 	PVector velocity;
 	float radius;
 	float mass;
@@ -11,6 +12,7 @@ class PhysicsCircle extends Entity {
 
 	PhysicsCircle(PVector origin, PVector velocity, float radius, float mass, float bounce, float roll) {
 		this.origin = origin;
+		this.lastTickOrigin = null;
 		this.velocity = velocity;
 		this.radius = radius;
 		this.mass = mass;
@@ -31,6 +33,8 @@ class PhysicsCircle extends Entity {
 
 		if (this.lastCollision != null && this.lastCollision.tick < currentTick - 5)
 			this.onGround = false;
+
+		this.lastTickOrigin = this.origin.copy();
 	}
 
 	void cleanupOffscreen() {
@@ -41,6 +45,8 @@ class PhysicsCircle extends Entity {
 	}
 
 	void updateCollision() {
+		if (this.lastTickOrigin == null) return;
+
 		int collisionCount = 0;
 		PVector velocityNormalized = this.velocity.copy().normalize();
 		PVector geometryIntersection = new PVector(); // how far the circle entered geometry on this tick
@@ -52,7 +58,8 @@ class PhysicsCircle extends Entity {
 
 		for (Geometry geo : entities.getEntitiesByClass(Geometry.class)) {
 			for (PVector[] line : geo.getLines()) {
-				float dist = this.getLineSegmentPointDist(line[0], line[1], this.origin);
+				// this is basically a circle-shaped trace:
+				float dist = this.getLineSegmentLineSegmentDist(line, new PVector[] {this.origin, this.lastTickOrigin});
 
 				if (dist < this.radius) {
 					PVector normal = PVector.sub(line[1], line[0]).rotate(-HALF_PI).normalize(); // normalized vector perpendicular to the line (on the left side -> outside)
@@ -66,7 +73,7 @@ class PhysicsCircle extends Entity {
 					reflectionTotal.add(reflectionNormalized);
 
 					if (collisionCount == 0) { // only do for the first line that was hit
-						collisionPos = getClosestPointOnLineSegment(line[1], line[0], this.origin);
+						collisionPos = getClosestPointOnLineSegment(line, this.origin);
 					}
 
 					collidedEntities.add(geo);
@@ -97,21 +104,36 @@ class PhysicsCircle extends Entity {
 		this.OnCollision(this.lastCollision);
 	}
 
-	float getLineSegmentPointDist(PVector start, PVector end, PVector point) {
-		return (float)Line2D.ptSegDist(start.x, start.y, end.x, end.y, point.x, point.y);
+	float getLineSegmentPointDist(PVector[] line, PVector point) {
+		return (float)Line2D.ptSegDist(line[0].x, line[0].y, line[1].x, line[1].y, point.x, point.y);
 	}
 
-	PVector getClosestPointOnLineSegment(PVector start, PVector end, PVector point)
+	float getLineSegmentLineSegmentDist(PVector[] lineA, PVector[] lineB) {
+		boolean intersecting = Line2D.linesIntersect(
+			lineA[0].x, lineA[0].y, lineA[1].x, lineA[1].y,
+			lineB[0].x, lineB[0].y, lineB[1].x, lineB[1].y
+		);
+		if (intersecting) return 0.0;
+
+		return min(new float[] {
+			this.getLineSegmentPointDist(lineA, lineB[0]),
+			this.getLineSegmentPointDist(lineA, lineB[1]),
+			this.getLineSegmentPointDist(lineB, lineA[0]),
+			this.getLineSegmentPointDist(lineB, lineA[1])
+		});
+	}
+
+	PVector getClosestPointOnLineSegment(PVector[] line, PVector point)
 	{
-		PVector diff = PVector.sub(end, start);
-		double frac = ((point.x - start.x) * diff.x + (point.y - start.y) * diff.y) / (diff.x * diff.x + diff.y * diff.y);
+		PVector diff = PVector.sub(line[1], line[0]);
+		double frac = ((point.x - line[0].x) * diff.x + (point.y - line[0].y) * diff.y) / (diff.x * diff.x + diff.y * diff.y);
 
 		if (frac < 0.0)
-			return start.copy();
+			return line[0].copy();
 		else if (frac > 1.0)
-			return end.copy();
+			return line[1].copy();
 		else
-			return new PVector((float)(start.x + frac * diff.x), (float)(start.y + frac * diff.y));
+			return new PVector((float)(line[0].x + frac * diff.x), (float)(line[0].y + frac * diff.y));
 	}
 
 	void OnCollision(Collision collision) {}

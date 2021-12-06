@@ -10,13 +10,13 @@ class Explosion extends Entity {
 		this.radius = radius;
 		this.damage = 0.0;
 		this.force = 2.5;
-		this.duration = 250;
+		this.duration = 350;
 
 		this.applyForce();
 	}
 
 	int getRestDuration() {
-		return this.duration - ((currentTick - this.birthTick) * TICK_MS);
+		return this.duration - (int)((currentTick - this.birthTick) * TICK_MS);
 	}
 
 	void applyForce() {

@@ -9,7 +9,7 @@ class Tank extends PhysicsCircle {
 	float imageScale;
 
 	Tank(PVector origin, color tint) {
-		super(origin, new PVector(), 16, 20, 0.15, 0.0);
+		super(origin, new PVector(), 16, 10, 0.15, 0.0);
 
 		this.tint = tint;
 		this.rotation = 0.0;
@@ -38,8 +38,8 @@ class Tank extends PhysicsCircle {
 		this.updateAim();
 
 		float accelScale = 0.0;
-		if (inputs.getIsActive("moveleft")) accelScale -= 0.1;
-		if (inputs.getIsActive("moveright")) accelScale += 0.1;
+		if (inputs.getIsActive("moveleft")) accelScale -= 0.05;
+		if (inputs.getIsActive("moveright")) accelScale += 0.05;
 
 		if (!this.onGround) accelScale = 0.0;
 
