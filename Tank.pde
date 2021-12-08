@@ -6,7 +6,7 @@ class Tank extends PhysicsCircle {
 
 	PImage imageBody;
 	PImage imageGun;
-	float imageScale;
+	float imageScale; // TODO: Make this absolute px size
 
 	Tank(PVector origin, color tint) {
 		super(origin, new PVector(), 16, 10, 0.15, 0.0);
@@ -30,7 +30,7 @@ class Tank extends PhysicsCircle {
 	}
 
 	void shootProjectile() {
-		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(16));
+		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(12));
 		new Projectile(projectileOrigin, new PVector(mouseX, mouseY).sub(projectileOrigin).div(50), this.tint).spawn();
 	}
 

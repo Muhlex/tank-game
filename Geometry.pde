@@ -17,6 +17,13 @@ class Geometry extends Entity {
 		this.shape.endShape(CLOSE);
 	}
 
+	PVector getVertex(int index) {
+		return this.vertices[index];
+	}
+	PVector[] getVertices() {
+		return this.vertices;
+	}
+
 	PVector[] getLine(int index) {
 		PVector start = this.vertices[index];
 		PVector end = this.vertices[index < this.vertices.length - 1 ? index + 1 : 0];

@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
+import de.lighti.clipper.*;
 
 PFont font;
 final int TICK_RATE = 100;
