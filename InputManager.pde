@@ -22,6 +22,10 @@ class InputManager {
 		return this.inputMappings.get(keyCode);
 	}
 
+	PVector getMousePos() {
+		return new PVector(mouseX / globalScale, mouseY / globalScale);
+	}
+
 	void OnKeyPressed() {
 		String inputName = this.getInputForKey(keyCode);
 		if (inputName == null || this.getIsActive(inputName)) return;

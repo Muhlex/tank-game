@@ -26,12 +26,12 @@ class Tank extends PhysicsCircle {
 	}
 
 	void updateAim() {
-		this.aimDirection = new PVector(mouseX, mouseY).sub(this.origin);
+		this.aimDirection = inputs.getMousePos().sub(this.origin);
 	}
 
 	void shootProjectile() {
 		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(12));
-		new Projectile(projectileOrigin, new PVector(mouseX, mouseY).sub(projectileOrigin).div(50), this.tint).spawn();
+		new Projectile(projectileOrigin, this.aimDirection.copy().mult(0.025).limit(10.0), this.tint).spawn();
 	}
 
 	void OnTick() {
