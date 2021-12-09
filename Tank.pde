@@ -6,7 +6,7 @@ class Tank extends PhysicsCircle {
 
 	PImage imageBody;
 	PImage imageGun;
-	float imageScale; // TODO: Make this absolute px size
+	float imageSize;
 
 	Tank(PVector origin, color tint) {
 		super(origin, new PVector(), 16, 10, 0.15, 0.0);
@@ -18,7 +18,7 @@ class Tank extends PhysicsCircle {
 
 		this.imageBody = loadImage("textures/tank.png");
 		this.imageGun = loadImage("textures/tank-gun.png");
-		this.imageScale = 0.375; // 48px
+		this.imageSize = 48;
 	}
 
 	void accelerate(float amount) {
@@ -74,16 +74,13 @@ class Tank extends PhysicsCircle {
 		pushMatrix();
 		rotate(this.rotation);
 		if (this.flipped)
-			scale(-this.imageScale, this.imageScale);
-		else
-			scale(this.imageScale);
-		image(this.imageBody, 0, 0);
+			scale(-1.0, 1.0);
+		image(this.imageBody, 0, 0, this.imageSize, this.imageSize);
 		popMatrix();
 
-		translate(0, -8 * this.imageScale);
-		scale(this.imageScale);
+		translate(0, this.imageSize / -16);
 		rotate(this.aimDirection.heading() + PI);
 
-		image(this.imageGun, 0, 0);
+		image(this.imageGun, 0, 0, this.imageSize, this.imageSize / 8);
 	}
 }
