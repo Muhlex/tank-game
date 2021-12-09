@@ -10,7 +10,7 @@ class Explosion extends Entity {
 		this.origin = origin;
 		this.radius = radius;
 		this.damage = 0.0;
-		this.force = 2.5;
+		this.force = 25.0;
 		this.duration = 350;
 		this.destructions = 0;
 
@@ -26,9 +26,13 @@ class Explosion extends Entity {
 	}
 
 	void applyForce() {
-		for (Tank tank : entities.getEntitiesByClass(Tank.class)) {
-			float forceFrac = 1.0 - min(PVector.dist(tank.origin, this.origin) / this.radius, 1.0);
-			tank.velocity.add(PVector.sub(tank.origin, this.origin).setMag(this.force * forceFrac));
+		List<PhysicsCircle> physicsEntities = new ArrayList<PhysicsCircle>();
+		physicsEntities.addAll(entities.getEntitiesByClass(Tank.class));
+		physicsEntities.addAll(entities.getEntitiesByClass(DebugBall.class));
+
+		for (PhysicsCircle entity : physicsEntities) {
+			float forceFrac = 1.0 - min(PVector.dist(entity.origin, this.origin) / this.radius, 1.0);
+			entity.applyForce(PVector.sub(entity.origin, this.origin).setMag(this.force * forceFrac));
 		}
 	}
 

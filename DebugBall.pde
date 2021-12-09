@@ -1,10 +1,14 @@
 class DebugBall extends PhysicsCircle {
 	color colorCircle;
+	boolean showLabel;
+	String debugLabel;
 
-	DebugBall(PVector origin, float mass, float bounce, float roll) {
+	DebugBall(PVector origin, float mass, float bounce, float roll, boolean showLabel) {
 		super(origin, new PVector(), mass + 8, mass, bounce, roll);
 
 		this.colorCircle = color(random(80, 255),random(80, 255),random(80, 255));
+		this.debugLabel = "MASS: " + nf(this.mass, 0, 0) + "\nBOUNCE: " + nf(this.bounce, 0, 2) + "\nROLL: " + nf(this.roll, 0, 2);
+		this.showLabel = showLabel;
 	}
 
 	void move(PVector velocity) {
@@ -32,14 +36,15 @@ class DebugBall extends PhysicsCircle {
 		fill(colorCircle);
 		circle(this.origin.x, this.origin.y, this.radius * 2);
 
+		if (!this.showLabel) return;
+
 		textSize(12);
 		textLeading(14);
-		String text = "MASS: " + nf(this.mass, 0, 0) + "\nBOUNCE: " + nf(this.bounce, 0, 2) + "\nROLL: " + nf(this.roll, 0, 2);
 		float textX = this.origin.x + this.radius;
 		float textY = this.origin.y + this.radius * 2;
 		fill(0);
-		text(text, textX + 1, textY + 1);
+		text(this.debugLabel, textX + 1, textY + 1);
 		fill(colorCircle);
-		text(text, textX, textY);
+		text(this.debugLabel, textX, textY);
 	}
 }

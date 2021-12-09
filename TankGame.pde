@@ -98,8 +98,11 @@ void keyReleased() {
 void mousePressed() {
 	if (!inputs.getIsActive("shift"))
 		entities.OnMousePressed();
+	else if (mouseButton != CENTER)
+		new DebugBall(inputs.getMousePos(), (int)random(1, 10), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), true).spawn();
 	else
-		new DebugBall(inputs.getMousePos(), (int)random(1, 10), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0)).spawn();
+		for (int i = 0; i < 100; i++)
+			new DebugBall(inputs.getMousePos(), (int)random(1, 10), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), false).spawn();
 }
 
 void mouseMoved() {

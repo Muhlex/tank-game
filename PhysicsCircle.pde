@@ -23,6 +23,10 @@ class PhysicsCircle extends Entity {
 		this.onGround = false;
 	}
 
+	void applyForce(PVector velocity) {
+		this.velocity.add(velocity.copy().div(this.mass));
+	}
+
 	void OnTick() {
 		this.cleanupOffscreen();
 
