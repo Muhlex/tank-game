@@ -59,7 +59,7 @@ class PhysicsCircle extends Entity {
 		for (Geometry geo : entities.getEntitiesByClass(Geometry.class)) {
 			for (PVector[] line : geo.getLines()) {
 				// this is basically a circle-shaped trace:
-				float dist = this.getLineSegmentLineSegmentDist(line, new PVector[] {this.origin, this.lastTickOrigin});
+				float dist = getLineSegmentLineSegmentDist(line, new PVector[] {this.origin, this.lastTickOrigin});
 
 				if (dist < this.radius) {
 					PVector normal = PVector.sub(line[1], line[0]).rotate(-HALF_PI).normalize(); // normalized vector perpendicular to the line (on the left side -> outside)
@@ -102,38 +102,6 @@ class PhysicsCircle extends Entity {
 			collidedEntities.toArray(new Entity[0])
 		);
 		this.OnCollision(this.lastCollision);
-	}
-
-	float getLineSegmentPointDist(PVector[] line, PVector point) {
-		return (float)Line2D.ptSegDist(line[0].x, line[0].y, line[1].x, line[1].y, point.x, point.y);
-	}
-
-	float getLineSegmentLineSegmentDist(PVector[] lineA, PVector[] lineB) {
-		boolean intersecting = Line2D.linesIntersect(
-			lineA[0].x, lineA[0].y, lineA[1].x, lineA[1].y,
-			lineB[0].x, lineB[0].y, lineB[1].x, lineB[1].y
-		);
-		if (intersecting) return 0.0;
-
-		return min(new float[] {
-			this.getLineSegmentPointDist(lineA, lineB[0]),
-			this.getLineSegmentPointDist(lineA, lineB[1]),
-			this.getLineSegmentPointDist(lineB, lineA[0]),
-			this.getLineSegmentPointDist(lineB, lineA[1])
-		});
-	}
-
-	PVector getClosestPointOnLineSegment(PVector[] line, PVector point)
-	{
-		PVector diff = PVector.sub(line[1], line[0]);
-		double frac = ((point.x - line[0].x) * diff.x + (point.y - line[0].y) * diff.y) / (diff.x * diff.x + diff.y * diff.y);
-
-		if (frac < 0.0)
-			return line[0].copy();
-		else if (frac > 1.0)
-			return line[1].copy();
-		else
-			return new PVector((float)(line[0].x + frac * diff.x), (float)(line[0].y + frac * diff.y));
 	}
 
 	void OnCollision(Collision collision) {}

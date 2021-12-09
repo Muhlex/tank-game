@@ -36,62 +36,12 @@ class Explosion extends Entity {
 		PVector[] circle = getCircleVertices(this.origin, this.radius / 1.5, 16);
 
 		for (Geometry geo : entities.getEntitiesByClass(Geometry.class)) {
-			PVector[][] polygons = this.subtractPolygons(geo.getVertices(), circle);
+			PVector[][] polygons = subtractPolygons(geo.getVertices(), circle);
 			for (PVector[] polygon : polygons) {
 				new Geometry(polygon, geo.colorFill).spawn(); // TODO: Fix render z-order
 			}
 			geo.delete();
 		}
-	}
-
-	PVector[][] subtractPolygons(PVector[] vertsSubject, PVector[] vertsClip) {
-		final int PRECISION = 1000;
-
-		Path subject = new Path(vertsSubject.length);
-		for (PVector vertex : vertsSubject) {
-			subject.add(new Point.LongPoint((long)vertex.x * PRECISION, (long)vertex.y * PRECISION));
-		}
-
-		Path clip = new Path(vertsClip.length);
-		for (PVector vertex : vertsClip) {
-			clip.add(new Point.LongPoint((long)vertex.x * PRECISION, (long)vertex.y * PRECISION));
-		}
-
-		Paths solution = new Paths();
-
-		DefaultClipper clipper = new DefaultClipper(Clipper.STRICTLY_SIMPLE);
-		clipper.addPath(subject, Clipper.PolyType.SUBJECT, true);
-		clipper.addPath(clip, Clipper.PolyType.CLIP, true);
-		clipper.execute(Clipper.ClipType.DIFFERENCE, solution);
-
-		PVector[][] result = new PVector[solution.size()][];
-
-		for (int i = 0; i < solution.size(); i++) {
-			Path path = solution.get(i);
-			result[i] = new PVector[path.size()];
-			for (int j = 0; j < path.size(); j++) {
-				Point.LongPoint point = path.get(j);
-				result[i][j] = new PVector(point.getX() / PRECISION, point.getY() / PRECISION);
-			}
-		}
-
-		return result;
-	}
-
-	PVector[] getCircleVertices(PVector origin, float radius, int sides) {
-		float step = TWO_PI / sides;
-		PVector[] vertices = new PVector[sides];
-
-		for (int i = 0; i < sides; i++) {
-			float angle = i * step;
-
-			vertices[i] = new PVector(
-				origin.x + radius * cos(angle),
-				origin.y + radius * sin(angle)
-			);
-		}
-
-		return vertices;
 	}
 
 	void OnTick() {
