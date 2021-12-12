@@ -19,7 +19,7 @@ class EntityManager {
 	void remove(Entity entity) {
 		this.entities.remove(entity);
 
-		List classEntities = this.getEntitiesByClass(entity.getClass());
+		List classEntities = this.getByClass(entity.getClass());
 		classEntities.remove(entity);
 	}
 
@@ -28,12 +28,12 @@ class EntityManager {
 		this.entitiesByClass.clear();
 	}
 
-	<E extends Entity> List<E> getEntitiesByClass(Class<E> entityClass) {
+	<E extends Entity> List<E> getByClass(Class<E> entityClass) {
 		this.entitiesByClass.putIfAbsent(entityClass, new CopyOnWriteArrayList<Entity>());
 		return (List<E>)this.entitiesByClass.get(entityClass);
 	}
 
-	int getEntityCount() {
+	int getCount() {
 		return this.entities.size();
 	}
 
@@ -43,7 +43,7 @@ class EntityManager {
 		}
 	}
 
-	void OnDraw() {
+	void OnDraw(Camera camera) {
 		for (Entity entity : this.entities) {
 			push();
 			entity.OnDraw();

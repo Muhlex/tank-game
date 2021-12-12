@@ -1,5 +1,4 @@
 class PhysicsCircle extends Entity {
-	PVector origin;
 	PVector lastTickOrigin;
 	PVector velocity;
 	float radius;
@@ -42,8 +41,8 @@ class PhysicsCircle extends Entity {
 	}
 
 	void cleanupOffscreen() {
-		boolean offscreenX = this.origin.x < width * -1 || this.origin.x > width + width * 1;
-		boolean offscreenY = this.origin.y < height * -8 || this.origin.y > height + height * 4;
+		boolean offscreenX = this.origin.x < DEFAULT_WIDTH * -1 || this.origin.x > DEFAULT_WIDTH + DEFAULT_WIDTH * 1;
+		boolean offscreenY = this.origin.y < DEFAULT_HEIGHT * -8 || this.origin.y > DEFAULT_HEIGHT + DEFAULT_HEIGHT * 4;
 		if (offscreenX || offscreenY)
 			this.delete();
 	}
@@ -60,7 +59,7 @@ class PhysicsCircle extends Entity {
 		List<Entity> collidedEntities = new ArrayList<Entity>();
 		collidedEntities.add(this);
 
-		for (Geometry geo : entities.getEntitiesByClass(Geometry.class)) {
+		for (Geometry geo : entities.getByClass(Geometry.class)) {
 			for (PVector[] line : geo.getLines()) {
 				// this is basically a circle-shaped trace:
 				float dist = getLineSegmentLineSegmentDist(line, new PVector[] {this.origin, this.lastTickOrigin});

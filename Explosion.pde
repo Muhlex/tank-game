@@ -1,5 +1,4 @@
 class Explosion extends Entity {
-	PVector origin;
 	float radius;
 	float damage;
 	float force;
@@ -27,8 +26,8 @@ class Explosion extends Entity {
 
 	void applyForce() {
 		List<PhysicsCircle> physicsEntities = new ArrayList<PhysicsCircle>();
-		physicsEntities.addAll(entities.getEntitiesByClass(Tank.class));
-		physicsEntities.addAll(entities.getEntitiesByClass(DebugBall.class));
+		physicsEntities.addAll(entities.getByClass(Tank.class));
+		physicsEntities.addAll(entities.getByClass(DebugBall.class));
 
 		for (PhysicsCircle entity : physicsEntities) {
 			float forceFrac = 1.0 - min(PVector.dist(entity.origin, this.origin) / this.radius, 1.0);
@@ -39,7 +38,7 @@ class Explosion extends Entity {
 	void destroyGeometry() {
 		PVector[] circle = getCircleVertices(this.origin, this.radius / 1.5, 16);
 
-		for (Geometry geo : entities.getEntitiesByClass(Geometry.class)) {
+		for (Geometry geo : entities.getByClass(Geometry.class)) {
 			PVector[][] polygons = subtractPolygons(geo.getVertices(), circle);
 			for (PVector[] polygon : polygons) {
 				new Geometry(polygon, geo.colorFill).spawn(); // TODO: Fix render z-order

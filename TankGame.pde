@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.HashSet;
 import java.util.Timer;
@@ -25,6 +26,7 @@ int lastTickDuration = 0;
 EntityManager entities;
 LevelManager levels;
 InputManager inputs;
+Camera camera;
 
 PFont fontRegular;
 PFont fontBold;
@@ -32,10 +34,12 @@ PFont fontBold;
 void settings() {
 	size(DEFAULT_WIDTH, DEFAULT_HEIGHT, P2D);
 	pixelDensity(displayDensity());
+	PJOGL.setIcon("textures/tank.png");
 }
 
 void setup() {
 	frameRate(1000);
+	cursor(loadImage("textures/xhair.png"), 16, 16);
 	surface.setTitle("Untitled Tank Game");
 	// surface.setResizable(true);
 
@@ -43,6 +47,7 @@ void setup() {
 	fontBold = createFont("fonts/barlow-extrabold.ttf", 64);
 	textFont(fontRegular);
 
+	camera = new Camera(new PVector(DEFAULT_WIDTH / 2.0, DEFAULT_HEIGHT / 2.0), DEFAULT_WIDTH * 2);
 	entities = new EntityManager();
 	levels = new LevelManager();
 	inputs = new InputManager();
@@ -65,19 +70,17 @@ void setup() {
 void tick() {
 	inputs.OnTick();
 	entities.OnTick();
+	camera.OnTick();
 }
 
 void draw() {
 	background(#aad9dd);
 
-	globalScale = width / (float)DEFAULT_WIDTH;
-	scale(globalScale);
-
-	entities.OnDraw();
+	camera.OnDraw();
 
 	String debugText = "fps: " + (int)frameRate + "\n" +
 		"tps: " + (int)tickRate + " (" + lastTickDuration + "ms)\n" +
-		"entities: " + entities.getEntityCount();
+		"entities: " + entities.getCount();
 	push();
 	textSize(16);
 	textLeading(16);
@@ -99,10 +102,10 @@ void mousePressed() {
 	if (!inputs.getIsActive("shift"))
 		entities.OnMousePressed();
 	else if (mouseButton != CENTER)
-		new DebugBall(inputs.getMousePos(), (int)random(1, 10), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), true).spawn();
+		new DebugBall(camera.getMousePos(), (int)random(1, 10), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), true).spawn();
 	else
 		for (int i = 0; i < 100; i++)
-			new DebugBall(inputs.getMousePos(), (int)random(1, 10), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), false).spawn();
+			new DebugBall(camera.getMousePos(), (int)random(1, 10), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), false).spawn();
 }
 
 void mouseMoved() {

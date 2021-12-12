@@ -1,5 +1,5 @@
 class Tank extends PhysicsCircle {
-	color tint;
+	color colorTint;
 	float rotation;
 	boolean flipped;
 	PVector aimDirection;
@@ -8,10 +8,10 @@ class Tank extends PhysicsCircle {
 	PImage imageGun;
 	float imageSize;
 
-	Tank(PVector origin, color tint) {
+	Tank(PVector origin, color colorTint) {
 		super(origin, new PVector(), 16, 10, 0.15, 0.0);
 
-		this.tint = tint;
+		this.colorTint = colorTint;
 		this.rotation = 0.0;
 		this.flipped = false;
 		this.aimDirection = new PVector(2, 0);
@@ -26,12 +26,12 @@ class Tank extends PhysicsCircle {
 	}
 
 	void updateAim() {
-		this.aimDirection = inputs.getMousePos().sub(this.origin);
+		this.aimDirection = camera.getMousePos().sub(this.origin);
 	}
 
 	void shootProjectile() {
 		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(12));
-		new Projectile(projectileOrigin, this.aimDirection.copy().mult(0.025).limit(10.0), this.tint).spawn();
+		new Projectile(projectileOrigin, this.aimDirection.copy().mult(0.025).limit(10.0), this.colorTint).spawn();
 	}
 
 	void OnTick() {
@@ -67,7 +67,7 @@ class Tank extends PhysicsCircle {
 	}
 
 	void OnDraw() {
-		tint(this.tint);
+		tint(this.colorTint);
 		imageMode(CENTER);
 		translate(this.origin.x, this.origin.y);
 
