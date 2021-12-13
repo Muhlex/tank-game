@@ -102,7 +102,7 @@ void keyReleased() {
 }
 
 void mousePressed() {
-	if (!inputs.getIsActive("shift"))
+	if (!inputs.getIsActive("debug"))
 		entities.OnMousePressed();
 	else if (mouseButton != CENTER)
 		new DebugBall(camera.getMousePos(), (int)random(1, 10), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), true).spawn();

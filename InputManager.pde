@@ -11,7 +11,7 @@ class InputManager {
 		this.inputMappings.put(KeyEvent.VK_A, "moveleft");
 		this.inputMappings.put(KeyEvent.VK_D, "moveright");
 		this.inputMappings.put(KeyEvent.VK_R, "restart");
-		this.inputMappings.put(KeyEvent.VK_SHIFT, "shift");
+		this.inputMappings.put(KeyEvent.VK_SHIFT, "debug");
 	}
 
 	boolean getIsActive(String inputName) {

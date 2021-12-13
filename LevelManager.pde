@@ -65,7 +65,7 @@ class LevelManager {
 		if (fillString.contains("#")) {
 			fillString = fillString.replace("#", "");
 		} else {
-			println("Can only load hexadecimal color values! Geometry will be rendered red.");
+			println("Can only load hexadecimal color values! Object will be rendered red: \n" + node);
 			fillString = "FF0000";
 		}
 

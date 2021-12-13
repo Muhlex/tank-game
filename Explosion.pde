@@ -43,7 +43,7 @@ class Explosion extends Entity {
 		for (Geometry geo : entities.getByClass(Geometry.class)) {
 			PVector[][] polygons = subtractPolygons(geo.getVertices(), circle);
 			for (PVector[] polygon : polygons) {
-				new Geometry(polygon, geo.colorFill).spawn(); // TODO: Fix render z-order
+				new Geometry(polygon, geo.colorFill).spawn();
 			}
 			geo.delete();
 		}

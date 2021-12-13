@@ -25,7 +25,7 @@ class Projectile extends PhysicsCircle {
 		imageMode(CENTER);
 
 		translate(this.origin.x, this.origin.y);
-		rotate(radians(ticksAlive * 8));
+		rotate(radians(ticksAlive * 6));
 		image(this.image, 0, 0, this.imageSize, this.imageSize);
 		// circle(0, 0, this.radius * 2);
 	}

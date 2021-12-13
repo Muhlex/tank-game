@@ -57,7 +57,6 @@ class PhysicsCircle extends Entity {
 		PVector reflectionTotal = new PVector();
 		PVector collisionPos = null;
 		List<Entity> collidedEntities = new ArrayList<Entity>();
-		collidedEntities.add(this);
 
 		for (Geometry geo : entities.getByClass(Geometry.class)) {
 			for (PVector[] line : geo.getLines()) {
