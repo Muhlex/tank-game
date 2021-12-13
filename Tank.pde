@@ -1,5 +1,6 @@
 class Tank extends PhysicsCircle {
 	color colorTint;
+	color colorProjectile;
 	float rotation;
 	boolean flipped;
 	PVector aimDirection;
@@ -13,6 +14,7 @@ class Tank extends PhysicsCircle {
 		this.zIndex = 1000;
 
 		this.colorTint = colorTint;
+		this.colorProjectile = color(hue(colorTint), 1.0, 0.5);
 		this.rotation = 0.0;
 		this.flipped = false;
 		this.aimDirection = new PVector(2, 0);
@@ -32,7 +34,7 @@ class Tank extends PhysicsCircle {
 
 	void shootProjectile() {
 		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(12));
-		new Projectile(projectileOrigin, this.aimDirection.copy().mult(0.025).limit(10.0), this.colorTint).spawn();
+		new Projectile(projectileOrigin, this.aimDirection.copy().mult(0.025).limit(10.0), this.colorProjectile).spawn();
 	}
 
 	void OnTick() {

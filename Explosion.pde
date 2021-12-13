@@ -52,7 +52,7 @@ class Explosion extends Entity {
 
 	void OnTick() {
 		float restDurationFrac = this.getRestDurationFrac();
-		if (this.destructions == 0 && restDurationFrac < 0.25)
+		if (this.destructions == 0 && restDurationFrac < 0.5)
 			this.destroyGeometry();
 
 		if (restDurationFrac <= 0)
@@ -63,7 +63,7 @@ class Explosion extends Entity {
 		final float OPACITY_FRAC = 0.3; // fraction of the lifetime at the start AND end to fade in AND out respectively
 		float durationFrac = 1.0 - this.getRestDurationFrac();
 
-		int opacity = (int)lerp(0, 200, 1.0 - (max((abs(durationFrac - 0.5) - (0.5 - OPACITY_FRAC)), 0.0) / OPACITY_FRAC));
+		float opacity = lerp(0, 0.9, 1.0 - (max((abs(durationFrac - 0.5) - (0.5 - OPACITY_FRAC)), 0.0) / OPACITY_FRAC));
 		float radius = lerp(this.radius / 5, this.radius, durationFrac);
 		color colorFill = lerpColor(color(#fff996), color(#ff4a3d), durationFrac);
 		noStroke();

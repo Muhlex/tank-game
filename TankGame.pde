@@ -44,6 +44,8 @@ void setup() {
 	surface.setTitle("Untitled Tank Game");
 	// surface.setResizable(true);
 
+	colorMode(HSB, 360.0, 1.0, 1.0, 1.0);
+
 	fontRegular = createFont("fonts/barlow-medium.ttf", 64);
 	fontBold = createFont("fonts/barlow-extrabold.ttf", 64);
 	textFont(fontRegular);

@@ -1,11 +1,17 @@
 class Projectile extends PhysicsCircle {
-	color tint;
+	color colorTint;
+	color colorTintGlow;
+	PImage image;
+	float imageSize;
 
-	Projectile(PVector origin, PVector velocity, color tint) {
+	Projectile(PVector origin, PVector velocity, color colorTint) {
 		super(origin, velocity, 6, 12, 0.33, 0.0);
 		this.zIndex = 1100;
 
-		this.tint = tint;
+		this.colorTint = colorTint;
+		this.colorTintGlow = color(hue(colorTint), 0.5, 1.0);
+		this.image = loadImage("textures/grenade.png");
+		this.imageSize = 16;
 	}
 
 	void OnCollision(Collision collision) {
@@ -14,8 +20,13 @@ class Projectile extends PhysicsCircle {
 	}
 
 	void OnDraw() {
-		noStroke();
-		fill(tint);
-		circle(this.origin.x, this.origin.y, this.radius * 2);
+		int ticksAlive = (int)(currentTick - this.birthTick);
+		tint((ticksAlive / 8) % 3 == 0 ? colorTint : colorTintGlow);
+		imageMode(CENTER);
+
+		translate(this.origin.x, this.origin.y);
+		rotate(radians(ticksAlive * 8));
+		image(this.image, 0, 0, this.imageSize, this.imageSize);
+		// circle(0, 0, this.radius * 2);
 	}
 }
