@@ -12,7 +12,7 @@ class LevelManager {
 		for (Entity entity : level.entities) {
 			entity.spawn();
 		}
-		camera.follow((List<Entity>)(List<?>)entities.getByClass(Tank.class), 480, 1920, 128);
+		camera.follow(entities.getByClass(Tank.class), 800.0, 1920.0, 128.0);
 	}
 
 	Level parseLevel(String path) {

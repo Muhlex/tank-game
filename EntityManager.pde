@@ -19,8 +19,7 @@ class EntityManager {
 	void remove(Entity entity) {
 		this.entities.remove(entity);
 
-		List classEntities = this.getByClass(entity.getClass());
-		classEntities.remove(entity);
+		this.getByClassNoCopy(entity.getClass()).remove(entity);
 	}
 
 	void clear() {
@@ -28,9 +27,12 @@ class EntityManager {
 		this.entitiesByClass.clear();
 	}
 
-	<E extends Entity> List<E> getByClass(Class<E> entityClass) {
+	<E extends Entity> List<E> getByClassNoCopy(Class<E> entityClass) {
 		this.entitiesByClass.putIfAbsent(entityClass, new CopyOnWriteArrayList<Entity>());
 		return (List<E>)this.entitiesByClass.get(entityClass);
+	}
+	<E extends Entity> List<E> getByClass(Class<E> entityClass) {
+		return new ArrayList<E>(this.getByClassNoCopy(entityClass));
 	}
 
 	int getCount() {

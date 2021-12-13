@@ -4,7 +4,7 @@ class Camera {
 	float minFov;
 	float maxFov;
 	float padding;
-	List<Entity> followedEntities;
+	List<? extends Entity> followedEntities;
 
 	PVector canvasCenter;
 	float globalScale;
@@ -18,17 +18,17 @@ class Camera {
 		this.fov = fov;
 		this.minFov = fov;
 		this.maxFov = fov;
-		this.padding = 0.0f;
+		this.padding = 0.0;
 		this.followedEntities = null;
 
 		this.updateDrawParams();
 
 		this.targetOrigin = null;
-		this.targetFov = -1.0f;
+		this.targetFov = -1.0;
 	}
 
-	void follow(List<Entity> entities, float minFov, float maxFov, float padding) {
-		this.followedEntities = new ArrayList<Entity>(entities);
+	void follow(List<? extends Entity> entities, float minFov, float maxFov, float padding) {
+		this.followedEntities = entities;
 		this.minFov = minFov;
 		this.maxFov = maxFov;
 		this.padding = padding;
@@ -43,7 +43,7 @@ class Camera {
 	void updateFollow() {
 		if (this.followedEntities == null) return;
 
-		for (Iterator<Entity> iter = this.followedEntities.iterator(); iter.hasNext(); ) {
+		for (Iterator<? extends Entity> iter = this.followedEntities.iterator(); iter.hasNext(); ) {
 			Entity entity = iter.next();
 			if (!entity.alive) iter.remove();
 		}
@@ -71,11 +71,11 @@ class Camera {
 
 	void updateTarget() {
 		if (this.targetOrigin != null) {
-			this.origin.add(PVector.sub(this.targetOrigin, this.origin).mult(0.02));
+			this.origin.add(PVector.sub(this.targetOrigin, this.origin).mult(0.04));
 		}
 
-		if (this.targetFov > -1.0f) {
-			this.fov = lerp(this.fov, this.targetFov, 0.02);
+		if (this.targetFov > -1.0) {
+			this.fov = lerp(this.fov, this.targetFov, 0.04);
 		}
 	}
 
@@ -91,10 +91,6 @@ class Camera {
 			.div(this.globalScale)
 			.div(this.fovScale)
 			.add(this.origin);
-		// return new PVector(
-		// 	(mouseX - this.canvasCenter.x) / this.globalScale / this.fovScale + this.origin.x,
-		// 	(mouseY - this.canvasCenter.y) / this.globalScale / this.fovScale + this.origin.y
-		// );
 	}
 
 	void OnDraw() {

@@ -45,6 +45,7 @@ class Explosion extends Entity {
 			}
 			geo.delete();
 		}
+		this.destructions++;
 	}
 
 	void OnTick() {
