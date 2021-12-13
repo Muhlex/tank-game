@@ -6,6 +6,8 @@ class Explosion extends Entity {
 	int destructions;
 
 	Explosion(PVector origin, float radius) {
+		this.zIndex = 1200;
+
 		this.origin = origin;
 		this.radius = radius;
 		this.damage = 0.0;

@@ -3,6 +3,7 @@ class Projectile extends PhysicsCircle {
 
 	Projectile(PVector origin, PVector velocity, color tint) {
 		super(origin, velocity, 6, 12, 0.33, 0.0);
+		this.zIndex = 1100;
 
 		this.tint = tint;
 	}

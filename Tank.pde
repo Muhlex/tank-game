@@ -10,6 +10,7 @@ class Tank extends PhysicsCircle {
 
 	Tank(PVector origin, color colorTint) {
 		super(origin, new PVector(), 16, 10, 0.15, 0.0);
+		this.zIndex = 1000;
 
 		this.colorTint = colorTint;
 		this.rotation = 0.0;

@@ -4,14 +4,21 @@ class EntityManager {
 
 	EntityManager() {
 		this.entities = new CopyOnWriteArrayList<Entity>();
-		this.entitiesByClass = new ConcurrentHashMap<Class,List<Entity>>();
+		this.entitiesByClass = new HashMap<Class,List<Entity>>();
 	}
 
 	void add(Entity entity) {
-		this.entities.add(entity);
+		int insertIndex = this.entities.size();
+		for (int i = insertIndex - 1; i >= 0; i--) {
+			if (entity.zIndex > this.entities.get(i).zIndex) {
+				insertIndex = i + 1;
+				break;
+			}
+		}
+		this.entities.add(insertIndex, entity);
 
 		Class entityClass = entity.getClass();
-		List classList = this.entitiesByClass.getOrDefault(entityClass, new CopyOnWriteArrayList<Entity>());
+		List classList = this.entitiesByClass.getOrDefault(entityClass, new ArrayList<Entity>());
 		classList.add(entity);
 		this.entitiesByClass.put(entityClass, classList);
 	}
@@ -28,7 +35,7 @@ class EntityManager {
 	}
 
 	<E extends Entity> List<E> getByClassNoCopy(Class<E> entityClass) {
-		this.entitiesByClass.putIfAbsent(entityClass, new CopyOnWriteArrayList<Entity>());
+		this.entitiesByClass.putIfAbsent(entityClass, new ArrayList<Entity>());
 		return (List<E>)this.entitiesByClass.get(entityClass);
 	}
 	<E extends Entity> List<E> getByClass(Class<E> entityClass) {
