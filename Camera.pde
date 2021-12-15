@@ -107,6 +107,7 @@ class Camera {
 		translate(-this.origin.x, -this.origin.y);
 
 		entities.OnDraw(this);
+		particles.OnDraw(this);
 
 		popMatrix();
 	}

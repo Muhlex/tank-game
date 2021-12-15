@@ -1,4 +1,4 @@
-class DebugBall extends PhysicsCircle {
+class DebugBall extends PhysicsEntity {
 	color colorFill;
 	boolean showLabel;
 	String debugLabel;

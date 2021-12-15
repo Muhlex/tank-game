@@ -1,6 +1,5 @@
-class Tank extends PhysicsCircle {
+class Tank extends PhysicsEntity {
 	color colorTint;
-	color colorProjectile;
 	float rotation;
 	boolean flipped;
 	PVector aimDirection;
@@ -14,7 +13,6 @@ class Tank extends PhysicsCircle {
 		this.zIndex = 1000;
 
 		this.colorTint = colorTint;
-		this.colorProjectile = color(hue(colorTint), 1.0, 0.4);
 		this.rotation = 0.0;
 		this.flipped = false;
 		this.aimDirection = new PVector(2, 0);
@@ -32,9 +30,14 @@ class Tank extends PhysicsCircle {
 		this.aimDirection = camera.getMousePos().sub(this.origin);
 	}
 
-	void shootProjectile() {
+	void shootGrenade() {
 		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(12));
-		new Projectile(projectileOrigin, this.aimDirection.copy().mult(0.02).limit(6.0), this.colorProjectile).spawn();
+		new Grenade(projectileOrigin, this.aimDirection.copy().mult(0.02).limit(6.0), this.colorTint).spawn();
+	}
+
+	void shootRocket() {
+		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(12));
+		new Rocket(projectileOrigin, this.aimDirection.copy().setMag(6.0), color(#ffab26)).spawn();
 	}
 
 	void OnTick() {
@@ -66,7 +69,11 @@ class Tank extends PhysicsCircle {
 	}
 
 	void OnMousePressed() {
-		this.shootProjectile();
+		if (mouseButton == LEFT) {
+			this.shootRocket();
+		} else if (mouseButton == RIGHT) {
+			this.shootGrenade();
+		}
 	}
 
 	void OnDraw() {

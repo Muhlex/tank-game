@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.HashSet;
@@ -25,6 +26,7 @@ float tickRate = 0;
 int lastTickDuration = 0;
 
 EntityManager entities;
+ParticleManager particles;
 LevelManager levels;
 InputManager inputs;
 Camera camera;
@@ -52,6 +54,7 @@ void setup() {
 
 	camera = new Camera(new PVector(DEFAULT_WIDTH / 2.0, DEFAULT_HEIGHT / 2.0), DEFAULT_WIDTH * 2);
 	entities = new EntityManager();
+	particles = new ParticleManager();
 	levels = new LevelManager();
 	inputs = new InputManager();
 
@@ -73,6 +76,7 @@ void setup() {
 void tick() {
 	inputs.OnTick();
 	entities.OnTick();
+	particles.OnTick();
 	camera.OnTick();
 }
 
@@ -83,7 +87,8 @@ void draw() {
 
 	String debugText = "fps: " + (int)frameRate + "\n" +
 		"tps: " + (int)tickRate + " (" + lastTickDuration + "ms)\n" +
-		"entities: " + entities.getCount();
+		"entities: " + entities.getCount() + "\n" +
+		"particles: " + particles.getCount();
 	push();
 	textSize(16);
 	textLeading(16);

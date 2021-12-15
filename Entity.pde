@@ -1,24 +1,17 @@
-abstract class Entity {
-	boolean alive;
-	long birthTick;
-	int zIndex;
-	PVector origin;
+abstract class Entity extends Node {
+	public int zIndex;
 
 	Entity() {
-		this.alive = false;
-		this.birthTick = -1L;
 		this.zIndex = 0;
-		this.origin = new PVector(0, 0);
 	}
 
 	void spawn() {
-		this.alive = true;
-		this.birthTick = currentTick;
+		super.spawn();
 		entities.add(this);
 	}
 
 	void delete() {
-		this.alive = false;
+		super.delete();
 		entities.remove(this);
 	}
 

@@ -1,4 +1,4 @@
-class PhysicsCircle extends Entity {
+abstract class PhysicsEntity extends Entity {
 	PVector lastTickOrigin;
 	PVector velocity;
 	float radius;
@@ -9,7 +9,7 @@ class PhysicsCircle extends Entity {
 	Collision lastCollision;
 	boolean onGround;
 
-	PhysicsCircle(PVector origin, PVector velocity, float radius, float mass, float bounce, float roll) {
+	PhysicsEntity(PVector origin, PVector velocity, float radius, float mass, float bounce, float roll) {
 		this.origin = origin;
 		this.lastTickOrigin = null;
 		this.velocity = velocity;

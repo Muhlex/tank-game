@@ -1,3 +1,10 @@
+color lerpColors(float amt, color... colors) {
+	if (colors.length == 1) return colors[0];
+
+	float cUnit = 1.0 / (colors.length - 1);
+	return lerpColor(colors[floor(amt / cUnit)], colors[ceil(amt / cUnit)], amt % cUnit / cUnit);
+}
+
 float getLineSegmentPointDist(PVector[] line, PVector point) {
 	return (float)Line2D.ptSegDist(line[0].x, line[0].y, line[1].x, line[1].y, point.x, point.y);
 }
