@@ -42,7 +42,7 @@ abstract class PhysicsEntity extends Entity {
 
 	void cleanupOffscreen() {
 		boolean offscreenX = this.origin.x < DEFAULT_WIDTH * -1 || this.origin.x > DEFAULT_WIDTH + DEFAULT_WIDTH * 1;
-		boolean offscreenY = this.origin.y < DEFAULT_HEIGHT * -8 || this.origin.y > DEFAULT_HEIGHT + DEFAULT_HEIGHT * 4;
+		boolean offscreenY = this.origin.y < DEFAULT_HEIGHT * -8 || this.origin.y > DEFAULT_HEIGHT + DEFAULT_HEIGHT * 2;
 		if (offscreenX || offscreenY)
 			this.delete();
 	}
@@ -94,7 +94,7 @@ abstract class PhysicsEntity extends Entity {
 
 		this.origin.add(geometryIntersection); // move circle out of geometry
 		this.velocity = PVector.mult(reflectionTotal.setMag(this.velocity.mag()), reflectionMult); // update velocity
-		this.onGround = abs(normalAverage.heading() + HALF_PI) <= QUARTER_PI; // angled max 45deg
+		this.onGround = this.origin.y < collisionPos.y;
 
 		this.lastCollision = new Collision(
 			currentTick,

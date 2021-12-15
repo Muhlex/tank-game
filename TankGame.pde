@@ -110,10 +110,10 @@ void mousePressed() {
 	if (!inputs.getIsActive("debug"))
 		entities.OnMousePressed();
 	else if (mouseButton != CENTER)
-		new DebugBall(camera.getMousePos(), (int)random(1, 10), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), true).spawn();
+		new DebugBall(camera.getMousePos(), random(1, 16), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), true).spawn();
 	else
 		for (int i = 0; i < 100; i++)
-			new DebugBall(camera.getMousePos(), (int)random(1, 10), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), false).spawn();
+			new DebugBall(camera.getMousePos(), random(1, 16), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), false).spawn();
 }
 
 void mouseMoved() {

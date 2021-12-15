@@ -8,7 +8,7 @@ class Rocket extends PhysicsEntity {
 	PShape circle;
 
 	Rocket(PVector origin, PVector velocity, color colorTint) {
-		super(origin, velocity, 6, 0, 0.0, 0.0);
+		super(origin, velocity, 6.0, 0.5, 0.0, 0.0);
 		this.zIndex = 1100;
 
 		this.colorTint = colorTint;

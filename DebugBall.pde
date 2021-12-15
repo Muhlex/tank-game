@@ -9,7 +9,7 @@ class DebugBall extends PhysicsEntity {
 		super(origin, new PVector(), mass + 8, mass, bounce, roll);
 
 		this.colorFill = color(random(360.0), 0.5, 1.0);
-		this.debugLabel = "MASS: " + nf(this.mass, 0, 0) + "\nBOUNCE: " + nf(this.bounce, 0, 2) + "\nROLL: " + nf(this.roll, 0, 2);
+		this.debugLabel = "MASS: " + nf(this.mass, 0, 2) + "\nBOUNCE: " + nf(this.bounce, 0, 2) + "\nROLL: " + nf(this.roll, 0, 2);
 		this.showLabel = showLabel;
 
 		this.shape = createShape(ELLIPSE, 0, 0, this.radius * 2, this.radius * 2);

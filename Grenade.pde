@@ -5,7 +5,7 @@ class Grenade extends PhysicsEntity {
 	float imageSize;
 
 	Grenade(PVector origin, PVector velocity, color colorTint) {
-		super(origin, velocity, 6, 12, 0.33, 0.0);
+		super(origin, velocity, 6.0, 12.0, 0.33, 0.0);
 		this.zIndex = 1100;
 
 		this.colorTint = color(hue(colorTint), 1.0, 0.4);
