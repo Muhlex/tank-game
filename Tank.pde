@@ -32,7 +32,7 @@ class Tank extends PhysicsEntity {
 
 	void shootGrenade() {
 		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(12));
-		new Grenade(projectileOrigin, this.aimDirection.copy().mult(0.02).limit(6.0), this.colorTint).spawn();
+		new Grenade(projectileOrigin, this.aimDirection.copy().mult(0.02).limit(6.0).add(this.velocity), this.colorTint).spawn();
 	}
 
 	void shootRocket() {
