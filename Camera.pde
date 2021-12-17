@@ -1,5 +1,4 @@
-class Camera {
-	PVector origin; // screen center point
+class Camera extends Node {
 	float fov; // total horizontal units
 	float minFov;
 	float maxFov;
@@ -14,7 +13,6 @@ class Camera {
 	float targetFov;
 
 	Camera(PVector origin, float fov) {
-		this.origin = origin;
 		this.fov = fov;
 		this.minFov = fov;
 		this.maxFov = fov;
@@ -22,6 +20,7 @@ class Camera {
 		this.followedEntities = null;
 
 		this.updateDrawParams();
+		this.updateBoundingBox();
 
 		this.targetOrigin = null;
 		this.targetFov = -1.0;
@@ -32,12 +31,6 @@ class Camera {
 		this.minFov = minFov;
 		this.maxFov = maxFov;
 		this.padding = padding;
-	}
-
-	void OnTick() {
-		this.updateFollow();
-		this.updateTarget();
-		this.updateDrawParams();
 	}
 
 	void updateFollow() {
@@ -91,6 +84,24 @@ class Camera {
 			.div(this.globalScale)
 			.div(this.fovScale)
 			.add(this.origin);
+	}
+
+	void updateBoundingBox() {
+		this.boundingBox = this.getBoundingBoxForRect(this.fov, this.fov * (height / (float)width));
+	}
+
+	boolean getIsNodeVisible(Node node) {
+		return this.boundingBox[0].x < node.boundingBox[1].x
+			&& this.boundingBox[0].y < node.boundingBox[1].y
+			&& this.boundingBox[1].x > node.boundingBox[0].x
+			&& this.boundingBox[1].y > node.boundingBox[0].y;
+	}
+
+	void OnTick() {
+		this.updateFollow();
+		this.updateTarget();
+		this.updateDrawParams();
+		this.updateBoundingBox();
 	}
 
 	void OnDraw() {

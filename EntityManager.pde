@@ -54,9 +54,8 @@ class EntityManager {
 
 	void OnDraw(Camera camera) {
 		for (Entity entity : this.entities) {
-			push();
-			entity.OnDraw();
-			pop();
+			if (!camera.getIsNodeVisible(entity)) continue;
+			entity.OnDrawInternal();
 		}
 	}
 

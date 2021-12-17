@@ -40,6 +40,10 @@ class Tank extends PhysicsEntity {
 		new Rocket(projectileOrigin, this.aimDirection.copy().setMag(6.0), color(#ffab26)).spawn();
 	}
 
+	void updateBoundingBox() {
+		this.boundingBox = this.getBoundingBoxForRadius(this.imageSize / 2.0);
+	}
+
 	void OnTick() {
 		this.updateAim();
 

@@ -7,6 +7,8 @@ class Level extends Entity {
 		this.nextLevelName = null;
 	}
 
+	void updateBoundingBox() {};
+
 	void OnInputStart(String inputName) {
 		if (inputName == "restart") {
 			levels.loadLevel("test");

@@ -24,6 +24,8 @@ class Particle extends Node {
 
 		this.colorTint = color(#ffffff);
 		this.opacity = 1.0;
+
+		this.updateBoundingBox();
 	}
 
 	void spawn() {
@@ -34,6 +36,10 @@ class Particle extends Node {
 	void delete() {
 		super.delete();
 		particles.remove(this);
+	}
+
+	void updateBoundingBox() {
+		this.boundingBox = this.getBoundingBoxForRadius(max(this.size.x, this.size.y) / 2.0);
 	}
 
 	void OnTick() {

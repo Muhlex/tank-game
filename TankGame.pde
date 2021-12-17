@@ -13,6 +13,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import de.lighti.clipper.*;
 
+final boolean DRAW_BOUNDING_BOXES = false;
+
 final int DEFAULT_WIDTH = 960;
 final int DEFAULT_HEIGHT = 540;
 final int TICK_RATE = 100;

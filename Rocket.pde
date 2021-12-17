@@ -21,6 +21,10 @@ class Rocket extends PhysicsEntity {
 		this.circle.disableStyle();
 	}
 
+	void updateBoundingBox() {
+		this.boundingBox = this.getBoundingBoxForRadius(this.imageSize / 2.0);
+	}
+
 	void OnCollision(Collision collision) {
 		new Explosion(collision.position, 48.0, 64.0).spawn();
 		this.delete();
@@ -38,6 +42,7 @@ class Rocket extends PhysicsEntity {
 		) {
 			void OnTick() {
 				super.OnTick();
+				this.updateBoundingBox();
 
 				if (this.size.x < 0.2)
 					this.delete();
@@ -53,9 +58,6 @@ class Rocket extends PhysicsEntity {
 	}
 
 	void OnDraw() {
-		long ticksAlive = this.getTicksAlive();
-		float sizeFrac = (sin(ticksAlive / 8.0) + 1.0) / 2;
-
 		imageMode(CENTER);
 
 		translate(this.origin.x, this.origin.y);

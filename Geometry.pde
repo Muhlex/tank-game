@@ -17,6 +17,8 @@ class Geometry extends Entity {
 			this.shape.vertex(point.x, point.y);
 		}
 		this.shape.endShape(CLOSE);
+
+		this.updateBoundingBox();
 	}
 
 	PVector getVertex(int index) {
@@ -38,6 +40,23 @@ class Geometry extends Entity {
 			result[i] = this.getLine(i);
 		}
 		return result;
+	}
+
+	void updateBoundingBox() {
+		PVector mins = null, maxs = null;
+		for (PVector vertex : this.vertices) {
+			if (mins == null || maxs == null) {
+				mins = vertex.copy();
+				maxs = vertex.copy();
+				continue;
+			}
+
+			mins.x = min(vertex.x, mins.x);
+			mins.y = min(vertex.y, mins.y);
+			maxs.x = max(vertex.x, maxs.x);
+			maxs.y = max(vertex.y, maxs.y);
+		}
+		this.boundingBox = new PVector[]{ mins, maxs };
 	}
 
 	void OnDraw() {

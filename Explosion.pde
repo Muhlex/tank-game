@@ -15,6 +15,7 @@ class Explosion extends Entity {
 		this.duration = 350;
 		this.destructions = 0;
 
+		this.updateBoundingBox();
 		this.applyForce();
 	}
 
@@ -48,6 +49,10 @@ class Explosion extends Entity {
 			geo.delete();
 		}
 		this.destructions++;
+	}
+
+	void updateBoundingBox() {
+		this.boundingBox = this.getBoundingBoxForRadius(this.radius);
 	}
 
 	void OnTick() {

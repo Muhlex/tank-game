@@ -20,24 +20,16 @@ abstract class PhysicsEntity extends Entity {
 
 		this.lastCollision = null;
 		this.onGround = false;
+
+		this.updateBoundingBox();
 	}
 
 	void applyForce(PVector velocity) {
 		this.velocity.add(velocity.copy().div(this.mass));
 	}
 
-	void OnTick() {
-		this.cleanupOffscreen();
-
-		this.velocity.y += this.mass * GRAVITY;
-		this.origin.add(this.velocity);
-
-		this.updateCollision();
-
-		if (this.lastCollision != null && this.lastCollision.tick < currentTick - 5)
-			this.onGround = false;
-
-		this.lastTickOrigin = this.origin.copy();
+	void updateBoundingBox() {
+		this.boundingBox = this.getBoundingBoxForRadius(this.radius);
 	}
 
 	void cleanupOffscreen() {
@@ -104,6 +96,21 @@ abstract class PhysicsEntity extends Entity {
 			collidedEntities.toArray(new Entity[0])
 		);
 		this.OnCollision(this.lastCollision);
+	}
+
+	void OnTick() {
+		this.cleanupOffscreen();
+
+		this.velocity.y += this.mass * GRAVITY;
+		this.origin.add(this.velocity);
+
+		this.updateCollision();
+
+		if (this.lastCollision != null && this.lastCollision.tick < currentTick - 5)
+			this.onGround = false;
+
+		this.updateBoundingBox();
+		this.lastTickOrigin = this.origin.copy();
 	}
 
 	void OnCollision(Collision collision) {}

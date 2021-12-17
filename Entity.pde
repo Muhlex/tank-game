@@ -21,6 +21,4 @@ abstract class Entity extends Node {
 	void OnInputEnd(String inputName) {};
 	void OnMousePressed() {};
 	void OnMouseMoved() {};
-	void OnTick() {};
-	void OnDraw() {};
 }

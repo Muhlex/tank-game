@@ -38,11 +38,14 @@ class ParticleManager {
 	}
 
 	void OnDraw(Camera camera) {
-		for (Particle particle : new ArrayList<Particle>(this.particles)) {
-			if (particle == null) return; // why do I have to do this???
-			push();
-			particle.OnDraw();
-			pop();
+		List<Particle> particlesSnapshot;
+		synchronized (this.particles) {
+			particlesSnapshot = new ArrayList<Particle>(this.particles);
+		}
+
+		for (Particle particle : particlesSnapshot) {
+			if (!camera.getIsNodeVisible(particle)) continue;
+			particle.OnDrawInternal();
 		}
 	}
 }
