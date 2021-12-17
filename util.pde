@@ -5,6 +5,17 @@ color lerpColors(float amt, color... colors) {
 	return lerpColor(colors[floor(amt / cUnit)], colors[ceil(amt / cUnit)], amt % cUnit / cUnit);
 }
 
+boolean isRectInsideRect(PVector[] inside, PVector[] outside) {
+	return isRectInsideRect(inside[0], inside[1], outside[0], outside[1]);
+}
+
+boolean isRectInsideRect(PVector insideTL, PVector insideBR, PVector outsideTL, PVector outsideBR) {
+	return outsideTL.x < insideBR.x
+		&& outsideTL.y < insideBR.y
+		&& outsideBR.x > insideTL.x
+		&& outsideBR.y > insideTL.y;
+}
+
 float getLineSegmentPointDist(PVector[] line, PVector point) {
 	return (float)Line2D.ptSegDist(line[0].x, line[0].y, line[1].x, line[1].y, point.x, point.y);
 }

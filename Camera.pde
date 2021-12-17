@@ -91,10 +91,7 @@ class Camera extends Node {
 	}
 
 	boolean getIsNodeVisible(Node node) {
-		return this.boundingBox[0].x < node.boundingBox[1].x
-			&& this.boundingBox[0].y < node.boundingBox[1].y
-			&& this.boundingBox[1].x > node.boundingBox[0].x
-			&& this.boundingBox[1].y > node.boundingBox[0].y;
+		return isRectInsideRect(node.boundingBox, this.boundingBox);
 	}
 
 	void OnTick() {

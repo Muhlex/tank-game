@@ -51,6 +51,7 @@ abstract class PhysicsEntity extends Entity {
 		List<Entity> collidedEntities = new ArrayList<Entity>();
 
 		for (Geometry geo : entities.getByClass(Geometry.class)) {
+			if (!isRectInsideRect(this.boundingBox, geo.boundingBox)) continue;
 			for (PVector[] line : geo.getLines()) {
 				// this is basically a circle-shaped trace:
 				float dist = getLineSegmentLineSegmentDist(line, new PVector[] {this.origin, this.lastTickOrigin});
