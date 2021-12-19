@@ -14,10 +14,6 @@ class Grenade extends PhysicsEntity {
 		this.imageSize = 16;
 	}
 
-	void updateBoundingBox() {
-		this.boundingBox = this.getBoundingBoxForRadius(this.imageSize / 2.0);
-	}
-
 	void OnCollision(Collision collision) {
 		new Explosion(collision.position, 96.0, 28.0).spawn();
 		this.delete();

@@ -22,15 +22,14 @@ final int TICK_MS = 1000 / TICK_RATE;
 final float GRAVITY = 0.005;
 
 float globalScale = 1.0;
-long currentTick = 0; // TODO: move to level
 long lastTickMillis = 0;
 float tickRate = 0;
 int lastTickDuration = 0;
 
+InputManager inputs;
+LevelManager levels;
 EntityManager entities;
 ParticleManager particles;
-LevelManager levels;
-InputManager inputs;
 Camera camera;
 
 PFont fontRegular;
@@ -44,9 +43,9 @@ void settings() {
 
 void setup() {
 	frameRate(1000);
-	cursor(loadImage("textures/xhair.png"), 16, 16);
 	surface.setTitle("Untitled Tank Game");
 	// surface.setResizable(true);
+	cursor(loadImage("textures/xhair.png"), 16, 16);
 
 	colorMode(HSB, 360.0, 1.0, 1.0, 1.0);
 
@@ -54,18 +53,17 @@ void setup() {
 	fontBold = createFont("fonts/barlow-extrabold.ttf", 64);
 	textFont(fontRegular);
 
-	camera = new Camera(new PVector(DEFAULT_WIDTH / 2.0, DEFAULT_HEIGHT / 2.0), DEFAULT_WIDTH * 2);
+	inputs = new InputManager();
+	levels = new LevelManager();
 	entities = new EntityManager();
 	particles = new ParticleManager();
-	levels = new LevelManager();
-	inputs = new InputManager();
+	camera = new Camera(new PVector(0, 0), DEFAULT_WIDTH * 2);
 
 	TimerTask tickTask = new TimerTask() {
 		void run() {
 			long millis = System.currentTimeMillis();
 
 			tick();
-			currentTick++;
 
 			lastTickDuration = (int)(System.currentTimeMillis() - millis);
 			tickRate = (float)(1000 / (millis - lastTickMillis == 0 ? 1 : millis - lastTickMillis));
@@ -73,10 +71,13 @@ void setup() {
 		}
 	};
 	new Timer().scheduleAtFixedRate(tickTask, 0L, (long)TICK_MS);
+
+	levels.loadLevel("test");
 }
 
 void tick() {
 	inputs.OnTick();
+	levels.OnTick();
 	entities.OnTick();
 	particles.OnTick();
 	camera.OnTick();
@@ -109,13 +110,7 @@ void keyReleased() {
 }
 
 void mousePressed() {
-	if (!inputs.getIsActive("debug"))
-		entities.OnMousePressed();
-	else if (mouseButton != CENTER)
-		new DebugBall(camera.getMousePos(), random(1, 16), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), true).spawn();
-	else
-		for (int i = 0; i < 100; i++)
-			new DebugBall(camera.getMousePos(), random(1, 16), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), false).spawn();
+	entities.OnMousePressed();
 }
 
 void mouseMoved() {

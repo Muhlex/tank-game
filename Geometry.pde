@@ -3,8 +3,9 @@ class Geometry extends Entity {
 	color colorFill;
 	PShape shape;
 
-	Geometry(PVector[] vertices, color colorFill) {
+	Geometry(PVector[] vertices, color colorFill, boolean solid) {
 		this.zIndex = 100;
+		this.solid = solid;
 
 		this.vertices = vertices;
 		this.colorFill = colorFill;

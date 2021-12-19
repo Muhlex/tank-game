@@ -1,18 +1,24 @@
 class LevelManager {
+	Level currentLevel;
 
 	LevelManager() {
-		this.loadLevel("test");
+		this.currentLevel = null;
+	}
+
+	Level getCurrent() {
+		return this.currentLevel;
 	}
 
 	void loadLevel(String path) {
-		Level level = parseLevel(path);
+		this.currentLevel = parseLevel(path);
 
 		entities.clear();
-		level.spawn();
-		for (Entity entity : level.entities) {
+
+		new DebugController().spawn();
+		for (Entity entity : this.currentLevel.entities)
 			entity.spawn();
-		}
-		camera.follow(entities.getByClass(Tank.class), 800.0, 1920.0, 128.0);
+
+		camera.follow(entities.getByClass(Tank.class), 800.0, 1920.0, 128.0, 0.04, true);
 	}
 
 	Level parseLevel(String path) {
@@ -50,7 +56,7 @@ class LevelManager {
 			vertices.add(shape.getVertex(j));
 		}
 
-		return new Geometry(vertices.toArray(new PVector[0]), this.getFill(node));
+		return new Geometry(vertices.toArray(new PVector[0]), this.getFill(node), true);
 	}
 
 	Tank parseTank(XML node) {
@@ -73,5 +79,11 @@ class LevelManager {
 			fillString = "FF" + fillString;
 
 		return unhex(fillString);
+	}
+
+	void OnTick() {
+		if (this.currentLevel == null) return;
+
+		this.currentLevel.OnTick();
 	}
 }

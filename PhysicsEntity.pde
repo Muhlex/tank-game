@@ -28,10 +28,6 @@ abstract class PhysicsEntity extends Entity {
 		this.velocity.add(velocity.copy().div(this.mass));
 	}
 
-	void updateBoundingBox() {
-		this.boundingBox = this.getBoundingBoxForRadius(this.radius);
-	}
-
 	void cleanupOffscreen() {
 		boolean offscreenX = this.origin.x < DEFAULT_WIDTH * -1 || this.origin.x > DEFAULT_WIDTH + DEFAULT_WIDTH * 1;
 		boolean offscreenY = this.origin.y < DEFAULT_HEIGHT * -8 || this.origin.y > DEFAULT_HEIGHT + DEFAULT_HEIGHT * 2;
@@ -51,7 +47,7 @@ abstract class PhysicsEntity extends Entity {
 		List<Entity> collidedEntities = new ArrayList<Entity>();
 
 		for (Geometry geo : entities.getByClass(Geometry.class)) {
-			if (!isRectInsideRect(this.boundingBox, geo.boundingBox)) continue;
+			if (!geo.solid || !isRectInsideRect(this.boundingBox, geo.boundingBox)) continue;
 			for (PVector[] line : geo.getLines()) {
 				// this is basically a circle-shaped trace:
 				float dist = getLineSegmentLineSegmentDist(line, new PVector[] {this.origin, this.lastTickOrigin});
@@ -90,13 +86,17 @@ abstract class PhysicsEntity extends Entity {
 		this.onGround = this.origin.y < collisionPos.y;
 
 		this.lastCollision = new Collision(
-			currentTick,
+			levels.getCurrent().currentTick,
 			collisionPos,
 			normalAverage,
 			collisionForce,
 			collidedEntities.toArray(new Entity[0])
 		);
 		this.OnCollision(this.lastCollision);
+	}
+
+	void updateBoundingBox() {
+		this.boundingBox = this.getBoundingBoxForRadius(this.radius * 2);
 	}
 
 	void OnTick() {
@@ -107,7 +107,7 @@ abstract class PhysicsEntity extends Entity {
 
 		this.updateCollision();
 
-		if (this.lastCollision != null && this.lastCollision.tick < currentTick - 5)
+		if (this.lastCollision != null && this.lastCollision.tick < levels.getCurrent().currentTick - 5)
 			this.onGround = false;
 
 		this.updateBoundingBox();

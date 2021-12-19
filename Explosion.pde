@@ -19,8 +19,8 @@ class Explosion extends Entity {
 		this.applyForce();
 	}
 
-	int getRestDuration() {
-		return this.duration - (int)((currentTick - this.birthTick) * TICK_MS);
+	long getRestDuration() {
+		return this.duration - (this.getTicksAlive() * TICK_MS);
 	}
 
 	float getRestDurationFrac() {
@@ -28,11 +28,11 @@ class Explosion extends Entity {
 	}
 
 	void applyForce() {
-		List<PhysicsEntity> physicsEntities = new ArrayList<PhysicsEntity>();
-		physicsEntities.addAll(entities.getByClass(Tank.class));
-		physicsEntities.addAll(entities.getByClass(DebugBall.class));
+		List<PhysicsEntity> affectedEntities = new ArrayList<PhysicsEntity>();
+		affectedEntities.addAll(entities.getByClass(Tank.class));
+		affectedEntities.addAll(entities.getByClass(DebugBall.class));
 
-		for (PhysicsEntity entity : physicsEntities) {
+		for (PhysicsEntity entity : affectedEntities) {
 			float forceFrac = 1.0 - min(PVector.dist(entity.origin, this.origin) / this.radius, 1.0);
 			entity.applyForce(PVector.sub(entity.origin, this.origin).setMag(this.force * forceFrac));
 		}
@@ -44,7 +44,7 @@ class Explosion extends Entity {
 		for (Geometry geo : entities.getByClass(Geometry.class)) {
 			PVector[][] polygons = subtractPolygons(geo.getVertices(), circle);
 			for (PVector[] polygon : polygons) {
-				new Geometry(polygon, geo.colorFill).spawn();
+				new Geometry(polygon, geo.colorFill, geo.solid).spawn();
 			}
 			geo.delete();
 		}

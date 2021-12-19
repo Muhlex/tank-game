@@ -1,8 +1,10 @@
 abstract class Entity extends Node {
 	public int zIndex;
+	public boolean solid;
 
 	Entity() {
 		this.zIndex = 0;
+		this.solid = false;
 	}
 
 	void spawn() {

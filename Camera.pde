@@ -3,6 +3,7 @@ class Camera extends Node {
 	float minFov;
 	float maxFov;
 	float padding;
+	float easingFrac;
 	List<? extends Entity> followedEntities;
 
 	PVector canvasCenter;
@@ -17,6 +18,7 @@ class Camera extends Node {
 		this.minFov = fov;
 		this.maxFov = fov;
 		this.padding = 0.0;
+		this.easingFrac = 1.0;
 		this.followedEntities = null;
 
 		this.updateDrawParams();
@@ -26,11 +28,21 @@ class Camera extends Node {
 		this.targetFov = -1.0;
 	}
 
+	void follow(List<? extends Entity> entities) {
+		this.follow(entities, this.minFov, this.maxFov, this.padding, this.easingFrac, false);
+	}
 	void follow(List<? extends Entity> entities, float minFov, float maxFov, float padding) {
+		this.follow(entities, minFov, maxFov, padding, this.easingFrac, false);
+	}
+	void follow(List<? extends Entity> entities, float minFov, float maxFov, float padding, float easingFrac, boolean instant) {
 		this.followedEntities = entities;
 		this.minFov = minFov;
 		this.maxFov = maxFov;
 		this.padding = padding;
+		this.easingFrac = easingFrac;
+
+		this.updateFollow();
+		this.updateTarget(instant);
 	}
 
 	void updateFollow() {
@@ -62,13 +74,15 @@ class Camera extends Node {
 		this.targetOrigin = mins.add(diff.div(2)); // !! mutates everything cause why not
 	}
 
-	void updateTarget() {
+	void updateTarget(boolean instant) {
+		float easingFrac = instant ? 1.0 : this.easingFrac;
+
 		if (this.targetOrigin != null) {
-			this.origin.add(PVector.sub(this.targetOrigin, this.origin).mult(0.04));
+			this.origin.add(PVector.sub(this.targetOrigin, this.origin).mult(easingFrac));
 		}
 
 		if (this.targetFov > -1.0) {
-			this.fov = lerp(this.fov, this.targetFov, 0.04);
+			this.fov = lerp(this.fov, this.targetFov, easingFrac);
 		}
 	}
 
@@ -96,7 +110,7 @@ class Camera extends Node {
 
 	void OnTick() {
 		this.updateFollow();
-		this.updateTarget();
+		this.updateTarget(false);
 		this.updateDrawParams();
 		this.updateBoundingBox();
 	}

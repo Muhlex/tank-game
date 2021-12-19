@@ -21,10 +21,6 @@ class Rocket extends PhysicsEntity {
 		this.circle.disableStyle();
 	}
 
-	void updateBoundingBox() {
-		this.boundingBox = this.getBoundingBoxForRadius(this.imageSize / 2.0);
-	}
-
 	void OnCollision(Collision collision) {
 		new Explosion(collision.position, 48.0, 64.0).spawn();
 		this.delete();

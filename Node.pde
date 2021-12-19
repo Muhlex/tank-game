@@ -13,7 +13,7 @@ abstract class Node {
 
 	void spawn() {
 		this.alive = true;
-		this.birthTick = currentTick;
+		this.birthTick = levels.getCurrent().currentTick;
 	}
 
 	void delete() {
@@ -21,7 +21,7 @@ abstract class Node {
 	}
 
 	long getTicksAlive() {
-		return currentTick - this.birthTick;
+		return levels.getCurrent().currentTick - this.birthTick;
 	}
 
 	PVector[] getBoundingBoxForRadius(float radius) {

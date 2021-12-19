@@ -11,6 +11,7 @@ class Tank extends PhysicsEntity {
 	Tank(PVector origin, color colorTint) {
 		super(origin, new PVector(), 16.0, 10.0, 0.15, 0.0);
 		this.zIndex = 1000;
+		this.solid = true;
 
 		this.colorTint = colorTint;
 		this.rotation = 0.0;
@@ -38,10 +39,6 @@ class Tank extends PhysicsEntity {
 	void shootRocket() {
 		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(12));
 		new Rocket(projectileOrigin, this.aimDirection.copy().setMag(6.0), color(#ffab26)).spawn();
-	}
-
-	void updateBoundingBox() {
-		this.boundingBox = this.getBoundingBoxForRadius(this.imageSize / 2.0);
 	}
 
 	void OnTick() {

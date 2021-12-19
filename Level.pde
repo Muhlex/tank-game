@@ -1,17 +1,15 @@
-class Level extends Entity {
+class Level {
 	Entity[] entities;
 	String nextLevelName;
+	long currentTick;
 
 	Level(Entity[] entities) {
 		this.entities = entities;
 		this.nextLevelName = null;
+		this.currentTick = 0L;
 	}
 
-	void updateBoundingBox() {};
-
-	void OnInputStart(String inputName) {
-		if (inputName == "restart") {
-			levels.loadLevel("test");
-		}
+	void OnTick() {
+		this.currentTick++;
 	}
 }

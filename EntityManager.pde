@@ -17,10 +17,21 @@ class EntityManager {
 		}
 		this.entities.add(insertIndex, entity);
 
-		Class entityClass = entity.getClass();
-		List classList = this.entitiesByClass.getOrDefault(entityClass, new ArrayList<Entity>());
-		classList.add(entity);
-		this.entitiesByClass.put(entityClass, classList);
+		List<Class<? extends Entity>> entityClasses = new ArrayList();
+		Class baseClass = entity.getClass();
+		Class superClass = baseClass.getSuperclass();
+
+		entityClasses.add(baseClass);
+		while (Entity.class.isAssignableFrom(superClass)) {
+			entityClasses.add(superClass);
+			superClass = superClass.getSuperclass();
+		}
+
+		for (Class entityClass : entityClasses) {
+			List classList = this.entitiesByClass.getOrDefault(entityClass, new ArrayList<Entity>());
+			classList.add(entity);
+			this.entitiesByClass.put(entityClass, classList);
+		}
 	}
 
 	void remove(Entity entity) {

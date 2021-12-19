@@ -17,10 +17,6 @@ class ParticleManager {
 		this.remParticles.add(particle);
 	}
 
-	void clear() {
-		this.particles.clear();
-	}
-
 	int getCount() {
 		return this.particles.size();
 	}
@@ -44,7 +40,7 @@ class ParticleManager {
 		}
 
 		for (Particle particle : particlesSnapshot) {
-			if (!camera.getIsNodeVisible(particle)) continue;
+			if (particle == null || !camera.getIsNodeVisible(particle)) continue;
 			particle.OnDrawInternal();
 		}
 	}
