@@ -6,6 +6,8 @@ class Camera extends Node {
 	float easingFrac;
 	List<? extends Entity> followedEntities;
 
+	List<CameraShake> cameraShakes;
+
 	PVector canvasCenter;
 	float globalScale;
 	float fovScale;
@@ -21,11 +23,21 @@ class Camera extends Node {
 		this.easingFrac = 1.0;
 		this.followedEntities = null;
 
+		this.cameraShakes = new ArrayList();
+
 		this.updateDrawParams();
 		this.updateBoundingBox();
 
 		this.targetOrigin = null;
 		this.targetFov = -1.0;
+	}
+
+	PVector getMousePos() {
+		return new PVector(mouseX, mouseY)
+			.sub(this.canvasCenter)
+			.div(this.globalScale)
+			.div(this.fovScale)
+			.add(this.origin);
 	}
 
 	void follow(List<? extends Entity> entities) {
@@ -43,6 +55,18 @@ class Camera extends Node {
 
 		this.updateFollow();
 		this.updateTarget(instant);
+	}
+
+	void shake(CameraShake shake) {
+		synchronized (this.cameraShakes) {
+			this.cameraShakes.add(shake);
+		}
+	}
+
+	void stopShaking() {
+		synchronized (this.cameraShakes) {
+			this.cameraShakes.clear();
+		}
 	}
 
 	void updateFollow() {
@@ -92,14 +116,6 @@ class Camera extends Node {
 		this.fovScale = DEFAULT_WIDTH / this.fov;
 	}
 
-	PVector getMousePos() {
-		return new PVector(mouseX, mouseY)
-			.sub(this.canvasCenter)
-			.div(this.globalScale)
-			.div(this.fovScale)
-			.add(this.origin);
-	}
-
 	void updateBoundingBox() {
 		this.boundingBox = this.getBoundingBoxForRect(this.fov, this.fov * (height / (float)width));
 	}
@@ -111,6 +127,7 @@ class Camera extends Node {
 	void OnTick() {
 		this.updateFollow();
 		this.updateTarget(false);
+
 		this.updateDrawParams();
 		this.updateBoundingBox();
 	}
@@ -128,9 +145,59 @@ class Camera extends Node {
 		// set camera position
 		translate(-this.origin.x, -this.origin.y);
 
+		synchronized (this.cameraShakes) {
+			for (Iterator<CameraShake> iter = this.cameraShakes.iterator(); iter.hasNext(); ) {
+				CameraShake shake = iter.next();
+				PVector shakeOffset = shake.getOffset();
+
+				if (shakeOffset == null) iter.remove();
+				else translate(shakeOffset.x, shakeOffset.y);
+			}
+		}
+
 		entities.OnDraw(this);
 		particles.OnDraw(this);
 
 		popMatrix();
+	}
+}
+
+class CameraShake {
+	float force;
+	int duration;
+	float startAngle;
+	float rotations;
+	int peakCount;
+	long startTick;
+
+	CameraShake(float force, int duration) {
+		this(force, duration, random(TWO_PI));
+	}
+	CameraShake(float force, int duration, float startAngle) {
+		this(force, duration, startAngle, duration / 4000.0, duration / 200);
+	}
+	CameraShake(float force, int duration, float startAngle, float rotations, int peakCount) {
+		this.force = force;
+		this.duration = duration;
+		this.startAngle = startAngle;
+		this.rotations = rotations;
+		this.peakCount = peakCount;
+		this.startTick = levels.getCurrent().currentTick;
+	}
+
+	int getRestDuration() {
+		return this.duration - (int)((levels.getCurrent().currentTick - this.startTick) * TICK_MS);
+	}
+	float getRestDurationFrac() {
+		return this.getRestDuration() / (float)this.duration;
+	}
+
+	PVector getOffset() {
+		float restFrac = this.getRestDurationFrac();
+		float frac = 1.0 - restFrac;
+		if (restFrac <= 0.0) return null;
+
+		PVector offset = new PVector(sin(lerp(0.0, PI * this.peakCount, restFrac)) * this.force * restFrac, 0.0);
+		return offset.rotate(frac * TWO_PI * this.rotations + this.startAngle);
 	}
 }

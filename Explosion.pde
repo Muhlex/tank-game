@@ -17,6 +17,15 @@ class Explosion extends Entity {
 
 		this.updateBoundingBox();
 		this.applyForce();
+
+		PVector vecToCamera = PVector.sub(camera.origin, this.origin);
+		float distToCamera = vecToCamera.mag();
+		float shakeMult = map(constrain(distToCamera, 40.0, 320.0), 40.0, 320.0, 1.0, 0.5);
+		camera.shake(new CameraShake(
+			force * 0.2 * shakeMult,
+			(int)(radius * 16 * shakeMult),
+			vecToCamera.heading()
+		));
 	}
 
 	long getRestDuration() {

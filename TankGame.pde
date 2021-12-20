@@ -44,8 +44,8 @@ void settings() {
 void setup() {
 	frameRate(1000);
 	surface.setTitle("Untitled Tank Game");
-	// surface.setResizable(true);
 	cursor(loadImage("textures/xhair.png"), 16, 16);
+	// surface.setResizable(true);
 
 	colorMode(HSB, 360.0, 1.0, 1.0, 1.0);
 
