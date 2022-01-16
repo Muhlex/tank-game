@@ -18,8 +18,8 @@ class LevelManager {
 		for (Entity entity : this.currentLevel.entities)
 			entity.spawn();
 
-		camera.follow(entities.getByClass(Tank.class), 800.0, 1920.0, 128.0, 0.04, true);
 		camera.stopShaking();
+		camera.follow(entities.getByClass(Tank.class), 800.0, 1920.0, 128.0, 0.04, true);
 	}
 
 	Level parseLevel(String path) {

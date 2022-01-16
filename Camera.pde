@@ -4,7 +4,7 @@ class Camera extends Node {
 	float maxFov;
 	float padding;
 	float easingFrac;
-	List<? extends Entity> followedEntities;
+	List<Entity> followedEntities;
 
 	List<CameraShake> cameraShakes;
 
@@ -21,7 +21,7 @@ class Camera extends Node {
 		this.maxFov = fov;
 		this.padding = 0.0;
 		this.easingFrac = 1.0;
-		this.followedEntities = null;
+		this.followedEntities = new ArrayList();
 
 		this.cameraShakes = new ArrayList();
 
@@ -47,7 +47,7 @@ class Camera extends Node {
 		this.follow(entities, minFov, maxFov, padding, this.easingFrac, false);
 	}
 	void follow(List<? extends Entity> entities, float minFov, float maxFov, float padding, float easingFrac, boolean instant) {
-		this.followedEntities = entities;
+		this.followedEntities.addAll(entities);
 		this.minFov = minFov;
 		this.maxFov = maxFov;
 		this.padding = padding;
@@ -55,6 +55,10 @@ class Camera extends Node {
 
 		this.updateFollow();
 		this.updateTarget(instant);
+	}
+
+	void unfollow() {
+		this.followedEntities.clear();
 	}
 
 	void shake(CameraShake shake) {
@@ -79,10 +83,7 @@ class Camera extends Node {
 
 		int entityCount = this.followedEntities.size();
 
-		if (entityCount == 0) {
-			this.followedEntities = null;
-			return;
-		}
+		if (entityCount == 0) return;
 
 		float[] xs = new float[entityCount];
 		float[] ys = new float[entityCount];

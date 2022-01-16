@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import de.lighti.clipper.*;
+import processing.sound.*;
 
 final boolean DRAW_BOUNDING_BOXES = false;
 
@@ -21,7 +22,12 @@ final int TICK_RATE = 100;
 final int TICK_MS = 1000 / TICK_RATE;
 final float GRAVITY = 0.005;
 
-float globalScale = 1.0;
+Sound sound;
+SoundFile SOUND_GRENADE_SHOOT;
+SoundFile SOUND_ROCKET_SHOOT;
+SoundFile SOUND_GRENADE_EXPLODE;
+SoundFile SOUND_ROCKET_EXPLODE;
+
 long lastTickMillis = 0;
 float tickRate = 0;
 int lastTickDuration = 0;
@@ -42,6 +48,13 @@ void settings() {
 }
 
 void setup() {
+	sound = new Sound(this);
+	sound.volume(0.05);
+	SOUND_GRENADE_SHOOT = new SoundFile(this, "sound/grenade-shoot.wav");
+	SOUND_ROCKET_SHOOT = new SoundFile(this, "sound/rocket-shoot.wav");
+	SOUND_GRENADE_EXPLODE = new SoundFile(this, "sound/grenade-explode.wav");
+	SOUND_ROCKET_EXPLODE = new SoundFile(this, "sound/rocket-explode.wav");
+
 	frameRate(1000);
 	surface.setTitle("Untitled Tank Game");
 	cursor(loadImage("textures/xhair.png"), 16, 16);

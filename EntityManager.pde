@@ -41,8 +41,9 @@ class EntityManager {
 	}
 
 	void clear() {
-		this.entities.clear();
-		this.entitiesByClass.clear();
+		for (Entity entity : this.entities) {
+			entity.delete();
+		}
 	}
 
 	<E extends Entity> List<E> getByClassNoCopy(Class<E> entityClass) {

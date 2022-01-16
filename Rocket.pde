@@ -22,7 +22,7 @@ class Rocket extends PhysicsEntity {
 	}
 
 	void OnCollision(Collision collision) {
-		new Explosion(collision.position, 48.0, 64.0).spawn();
+		new Explosion(collision.position, 48.0, 64.0, SOUND_ROCKET_EXPLODE).spawn();
 		this.delete();
 	}
 

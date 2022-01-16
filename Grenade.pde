@@ -15,7 +15,7 @@ class Grenade extends PhysicsEntity {
 	}
 
 	void OnCollision(Collision collision) {
-		new Explosion(collision.position, 96.0, 28.0).spawn();
+		new Explosion(collision.position, 96.0, 28.0, SOUND_GRENADE_EXPLODE).spawn();
 		this.delete();
 	}
 

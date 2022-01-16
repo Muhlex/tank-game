@@ -33,12 +33,16 @@ class Tank extends PhysicsEntity {
 
 	void shootGrenade() {
 		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(12));
-		new Grenade(projectileOrigin, this.aimDirection.copy().mult(0.02).limit(6.0).add(this.velocity), this.colorTint).spawn();
+		PVector projectileVelocity = this.aimDirection.copy().mult(0.02).limit(6.0).add(this.velocity);
+		new Grenade(projectileOrigin, projectileVelocity, this.colorTint).spawn();
+		this.velocity.add(projectileVelocity.copy().mult(-0.25));
+		SOUND_GRENADE_SHOOT.play();
 	}
 
 	void shootRocket() {
 		PVector projectileOrigin = this.origin.copy().add(this.aimDirection.copy().setMag(12));
 		new Rocket(projectileOrigin, this.aimDirection.copy().setMag(6.0), color(#ffab26)).spawn();
+		SOUND_ROCKET_SHOOT.play();
 	}
 
 	void OnTick() {

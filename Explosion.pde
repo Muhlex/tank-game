@@ -5,7 +5,7 @@ class Explosion extends Entity {
 	int duration;
 	int destructions;
 
-	Explosion(PVector origin, float radius, float force) {
+	Explosion(PVector origin, float radius, float force, SoundFile sound) {
 		this.zIndex = 1200;
 
 		this.origin = origin;
@@ -26,6 +26,8 @@ class Explosion extends Entity {
 			(int)(radius * 16 * shakeMult),
 			vecToCamera.heading()
 		));
+
+		sound.play();
 	}
 
 	long getRestDuration() {
