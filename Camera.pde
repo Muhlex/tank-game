@@ -95,7 +95,9 @@ class Camera extends Node {
 		PVector maxs = new PVector(max(xs), max(ys));
 		PVector diff = PVector.sub(maxs, mins);
 
-		this.targetFov = constrain(maxs.x - mins.x + (this.padding * 2), this.minFov, this.maxFov);
+		float aspectRatio = width / (float)height;
+		float baseFov = max(maxs.x - mins.x, (maxs.y - mins.y) * aspectRatio);
+		this.targetFov = constrain(baseFov + (this.padding * 2), this.minFov, this.maxFov);
 		this.targetOrigin = mins.add(diff.div(2)); // !! mutates everything cause why not
 	}
 
