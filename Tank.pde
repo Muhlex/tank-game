@@ -57,12 +57,9 @@ class Tank extends PhysicsEntity {
 		if (accelScale != 0) {
 			this.accelerate(accelScale);
 			this.flipped = accelScale > 0.0;
-			this.roll = 0.95;
+			this.roll = 0.96;
 		} else {
-			if (this.velocity.mag() > 0.25)
-				this.roll = 0.8;
-			else
-				this.roll = 0.0;
+			this.roll = lerp(0.0, 0.96, constrain(this.velocity.mag() - 0.1, 0.0, 1.0));
 		}
 
 		super.OnTick();
