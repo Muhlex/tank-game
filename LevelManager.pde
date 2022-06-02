@@ -48,7 +48,8 @@ class LevelManager {
 					break;
 			}
 		}
-		return new Level(entities.toArray(new Entity[0]));
+
+		return new Level(entities.toArray(new Entity[0]), new PVector(svgShape.width, svgShape.height));
 	}
 
 	Geometry parseGeometry(XML node, PShape shape) {

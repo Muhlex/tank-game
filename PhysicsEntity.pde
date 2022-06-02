@@ -28,9 +28,10 @@ abstract class PhysicsEntity extends Entity {
 		this.velocity.add(velocity.copy().div(this.mass));
 	}
 
-	void cleanupOffscreen() {
-		boolean offscreenX = this.origin.x < DEFAULT_WIDTH * -1 || this.origin.x > DEFAULT_WIDTH + DEFAULT_WIDTH * 1;
-		boolean offscreenY = this.origin.y < DEFAULT_HEIGHT * -8 || this.origin.y > DEFAULT_HEIGHT + DEFAULT_HEIGHT * 2;
+	void cleanupInVoid() {
+		PVector lvlSize = levels.getCurrent().size;
+		boolean offscreenX = this.origin.x < -200 * -1 || this.origin.x > lvlSize.x + 200;
+		boolean offscreenY = this.origin.y < -800 || this.origin.y > lvlSize.y + 3200;
 		if (offscreenX || offscreenY)
 			this.delete();
 	}
@@ -100,7 +101,7 @@ abstract class PhysicsEntity extends Entity {
 	}
 
 	void OnTick() {
-		this.cleanupOffscreen();
+		this.cleanupInVoid();
 
 		this.velocity.y += this.mass * GRAVITY;
 		this.origin.add(this.velocity);
