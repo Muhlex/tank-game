@@ -10,7 +10,7 @@ class EntityManager {
 	void add(Entity entity) {
 		int insertIndex = this.entities.size();
 		for (int i = insertIndex - 1; i >= 0; i--) {
-			if (entity.zIndex > this.entities.get(i).zIndex) {
+			if (entity.zIndex >= this.entities.get(i).zIndex) {
 				insertIndex = i + 1;
 				break;
 			}
