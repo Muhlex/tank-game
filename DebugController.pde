@@ -8,9 +8,9 @@ class DebugController extends Entity {
 	}
 
 	void OnMousePressed() {
-		if (!inputs.getIsActive("debug")) return;
+		if (mouseButton != CENTER) return;
 
-		if (mouseButton != CENTER)
+		if (!inputs.getIsActive("debug"))
 			new DebugBall(camera.getMousePos(), random(1, 16), random(0, 1), random(1.0) < 0.5 ? random(0, 1) : random(0.95, 1.0), true).spawn();
 		else
 			for (int i = 0; i < 100; i++)
